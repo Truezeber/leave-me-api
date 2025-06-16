@@ -9,7 +9,7 @@ export const errorHandler = (
   console.error(err.stack);
   res.status(500).json({
     error: {
-      message: err.message || 'Wystąpił nieoczekiwany błąd',
+      message: err.message || 'Unexpected error',
     },
   });
 };

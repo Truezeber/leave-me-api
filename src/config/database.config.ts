@@ -2,13 +2,21 @@ import { MongoClient } from 'mongodb';
 import { config } from './app.config';
 import { logger } from '../utils/logger';
 
-const uri = config.mongoURI.replace('localhost', '127.0.0.1');
+const uri = config.mongoURI;
 export const client = new MongoClient(uri);
+
+export const getDb = () => {
+  return client.db(config.dbName);
+};
 
 export const connectToDatabase = async (): Promise<MongoClient | null> => {
   try {
     await client.connect();
-    logger.info('Connected to MongoDB');
+    
+    const db = client.db(config.dbName);
+    const collections = await db.listCollections().toArray();
+    logger.info(`Connected to MongoDB. Available collections: ${collections.map(c => c.name).join(', ')}`);
+    
     return client;
   } catch (error) {
     logger.error('MongoDB connection error:', error);
