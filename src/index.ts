@@ -1,26 +1,20 @@
 import express from 'express';
-import testRouter from './routes/test.route';
-import { errorHandler } from './middlewares/error.middleware';
 import { config } from './config/app.config';
 import { logger } from './utils/logger';
-import { swaggerOptions } from './config/swagger.config';
+import { initializeApp } from './loaders';
 
-const app = express();
-const PORT = config.port;
+const startServer = async () => {
+  const app = express();
+  const PORT = config.port;
+  
+  await initializeApp(app);
+  
+  app.listen(PORT, () => {
+    logger.info(`Server running on http://localhost:${PORT}`);
+  });
+};
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerJSDoc = require('swagger-jsdoc');
-
-
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.use(express.json());
-
-app.use('/api/test', testRouter);
-
-app.use(errorHandler);
-
-app.listen(PORT, () => {
-  logger.info(`Server running on http://localhost:${PORT}`);
+startServer().catch(err => {
+  logger.error('Failed to start server:', err);
+  process.exit(1);
 });
