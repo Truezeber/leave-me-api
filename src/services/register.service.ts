@@ -1,27 +1,7 @@
+import { log } from 'console';
 import { client, mainDb } from '../config/database.config';
 import { User, UserRegister } from '../models/user.model';
 import { logger } from '../utils/logger';
-
-// export const getAllUsers = async (): Promise<TestUser[]> => {
-//   try {
-//     if (!client) {
-//       logger.warn('Database client is not available');
-//       return [];
-//     }
-
-//     const database = client.db('crud');
-//     const collection = database.collection('users');
-    
-//     logger.info('Fetching users from collection');
-//     const users = await collection.find({}).toArray();
-//     logger.info(`Found ${users.length} users`);
-    
-//     return users as unknown as TestUser[];
-//   } catch (error) {
-//     logger.error('Error fetching users:', error);
-//     return [];
-//   }
-// };
 
 export const registerUser = async (user: UserRegister): Promise<User> => {
   try {
@@ -33,8 +13,16 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
     const collection = mainDb.collection('users');
     logger.info('Mongo collection', collection);
 
+    logger.info('User:', user);
+
     const newUser: User = {
-      ...user,
+      email: user.email,
+      password: user.password,
+      nickname: user.nickname,
+      leave_me_id: user.leave_me_id,
+      avatar_url: user.avatar_url,
+      tos_accepted: user.tos_accepted,
+      pp_accepted: user.pp_accepted,
       status: "",
       background_url: "",
       friends: [],
