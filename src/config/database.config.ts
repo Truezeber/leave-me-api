@@ -4,10 +4,7 @@ import { logger } from '../utils/logger';
 
 const uri = config.mongoURI;
 export const client = new MongoClient(uri);
-
-export const getDb = () => {
-  return client.db(config.dbName);
-};
+export const mainDb = client.db(config.dbName);
 
 export const connectToDatabase = async (): Promise<MongoClient | null> => {
   try {

@@ -1,11 +1,11 @@
 import { Router } from "express";
-import * as userController from "../controllers/user.controller";
+import * as userController from "../controllers/testuser.controller";
 
 const router = Router();
 
 /**
  * @swagger
- * /api/users:
+ * /api/testusers:
  *   get:
  *     summary: Gets all users
  *     tags: [Users]
