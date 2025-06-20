@@ -72,4 +72,19 @@ export const validator = {
       return false;
     }
   },
+  url: (url: string) => {
+    logger.info(`Validating url: `, url);
+
+    const schema = z.url({ error: "Not a valid URL!" });
+
+    try {
+      schema.parse(url);
+      logger.success(`URL is valid: `, url);
+      return true;
+    } catch (error) {
+      const validationError = fromError(error);
+      logger.error(validationError.toString(), url);
+      return false;
+    }
+  },
 };
