@@ -73,3 +73,26 @@ describe("Password validator", () => {
     );
   });
 });
+
+describe("Nickname validator", () => {
+  test("Valid nickname", () => {
+    expect(validator.nickname(Math.random().toString(16).slice(2, 10))).toBe(
+      true
+    );
+  });
+
+  test("Too short", () => {
+    expect(validator.nickname(Math.random().toString(16).slice(2, 4))).toBe(
+      false
+    );
+  });
+
+  test("Too long", () => {
+    expect(
+      validator.nickname(
+        Math.random().toString(16).slice(2) +
+          Math.random().toString(16).slice(2)
+      )
+    ).toBe(false);
+  });
+});
