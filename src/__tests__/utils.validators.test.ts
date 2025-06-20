@@ -87,24 +87,27 @@ describe("Password validator", () => {
 });
 
 describe("Nickname validator", () => {
-  test("Valid nickname", () => {
-    expect(validator.nickname(Math.random().toString(16).slice(2, 10))).toBe(
-      true
-    );
+  test("Valid nickname with lower case letters", () => {
+    expect(validator.nickname("reallyvalidnickname")).toBe(true);
+  });
+
+  test("Valid nickname with upper case letters", () => {
+    expect(validator.nickname("ReallyValidNickname")).toBe(true);
+  });
+
+  test("Valid nickname with special characters", () => {
+    expect(validator.nickname("re@llyv@lidn@()me")).toBe(true);
+  });
+
+  test("Valid nickname with numbers", () => {
+    expect(validator.nickname("r3a11yvalidnickn4me")).toBe(true);
+  });
+
+  test("Valid nickname with combined characters", () => {
+    expect(validator.nickname("Re@11yVal1dN1(kn@m3")).toBe(true);
   });
 
   test("Too short", () => {
-    expect(validator.nickname(Math.random().toString(16).slice(2, 4))).toBe(
-      false
-    );
-  });
-
-  test("Too long", () => {
-    expect(
-      validator.nickname(
-        Math.random().toString(16).slice(2) +
-          Math.random().toString(16).slice(2)
-      )
-    ).toBe(false);
+    expect(validator.nickname("In")).toBe(false);
   });
 });
