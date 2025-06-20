@@ -1,6 +1,6 @@
 import { validator } from "../utils/validators";
 
-describe("E-mail valudator", () => {
+describe("E-mail validator", () => {
   test("Valid e-mail", () => {
     expect(validator.email("test@test.com")).toBe(true);
   });
