@@ -38,4 +38,5 @@ export const validator = {
     }
   },
   password: (password: string) => {
+    logger.info(`Validating password: `, password);
 };
