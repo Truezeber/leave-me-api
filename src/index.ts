@@ -3,6 +3,14 @@ import { config } from "./config/app.config";
 import { logger } from "./utils/logger.utils";
 import { initializeApp } from "./loaders";
 
+if (config.jwtSecret === "NO_JWT") {
+  logger.error(
+    "\x1b[1m\x1b[31m%s\x1b[0m",
+    "JWT_SECRET is NOT set! Killing the app. Set JWT_SECRET in .env and launch again."
+  );
+  process.exit(1);
+}
+
 const startServer = async () => {
   const app = express();
   const PORT = config.port;
