@@ -36,7 +36,13 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
     }
 
     const collection = mainDb.collection("users");
+
     logger.info("Mongo collection", collection);
+
+    if (await collection.findOne({ email: user.email })) {
+      logger.warn("Email already exists");
+      throw { message: "Email already exists", statusCode: 409 };
+    }
 
     logger.info("User:", user);
 
