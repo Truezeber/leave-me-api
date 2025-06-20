@@ -1,4 +1,3 @@
-import { log } from 'console';
 import { client, mainDb } from '../config/database.config';
 import { User, UserRegister } from '../models/user.model';
 import { logger } from '../utils/logger';

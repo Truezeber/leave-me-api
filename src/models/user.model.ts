@@ -1,4 +1,15 @@
+import { z } from 'zod/v4'
 import { ObjectId } from "mongodb";
+
+export const userRegisterSchema = z.object({
+  email: z.email(),
+  password: z.string().min(6),
+  nickname: z.string().min(3).max(20),
+  leave_me_id: z.string().min(3).max(10).startsWith('@'),
+  avatar_url: z.url(),
+  tos_accepted: z.boolean(),
+  pp_accepted: z.boolean(),
+})
 
 export interface User {
   _id?: ObjectId;
@@ -23,12 +34,4 @@ export interface User {
   join_date: Date;
 }
 
-export interface UserRegister {
-  email: string;
-  password: string;
-  nickname: string;
-  leave_me_id: string;
-  avatar_url: string;
-  tos_accepted: boolean;
-  pp_accepted: boolean;
-}
+export type UserRegister = z.infer<typeof userRegisterSchema>;
