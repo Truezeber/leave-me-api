@@ -39,4 +39,19 @@ export const validator = {
   },
   password: (password: string) => {
     logger.info(`Validating password: `, password);
+
+    const schema = z
+      .string({ error: "Not a string!" })
+      .min(6, { error: "Too short!" });
+
+    try {
+      schema.parse(password);
+      logger.success(`Password is valid: `, password);
+      return true;
+    } catch (error) {
+      const validationError = fromError(error);
+      logger.error(validationError.toString(), password);
+      return false;
+    }
+  },
 };
