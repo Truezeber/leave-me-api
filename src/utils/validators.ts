@@ -54,4 +54,22 @@ export const validator = {
       return false;
     }
   },
+  nickname: (nickname: string) => {
+    logger.info(`Validating nickname: `, nickname);
+
+    const schema = z
+      .string({ error: "Not a string!" })
+      .min(3, { error: "Too short!" })
+      .max(20, { error: "Too long!" });
+
+    try {
+      schema.parse(nickname);
+      logger.success(`Nickname is valid: `, nickname);
+      return true;
+    } catch (error) {
+      const validationError = fromError(error);
+      logger.error(validationError.toString(), nickname);
+      return false;
+    }
+  },
 };
