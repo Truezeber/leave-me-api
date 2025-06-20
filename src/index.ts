@@ -10,7 +10,9 @@ const startServer = async () => {
   await initializeApp(app);
 
   app.listen(PORT, () => {
+    logger.success("Server started succesfully");
     logger.info(`Server running on http://localhost:${PORT}`);
+    logger.info("API docs: http://localhost:3000/api-docs/#/");
   });
 };
 
