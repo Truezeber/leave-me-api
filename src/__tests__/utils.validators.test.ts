@@ -21,3 +21,5 @@ describe("E-mail validator", () => {
     expect(validator.email("testtest.com")).toBe(false);
   });
 });
+
+describe("LeaveMeId validator", () => {
