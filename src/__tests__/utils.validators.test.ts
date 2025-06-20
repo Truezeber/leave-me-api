@@ -1,4 +1,4 @@
-import { validator } from "../utils/validators";
+import { validator } from "../utils/validators.utils";
 
 describe("E-mail validator", () => {
   test("Valid e-mail", () => {

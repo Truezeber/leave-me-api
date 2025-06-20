@@ -1,6 +1,6 @@
 import express from "express";
 import { config } from "./config/app.config";
-import { logger } from "./utils/logger";
+import { logger } from "./utils/logger.utils";
 import { initializeApp } from "./loaders";
 
 const startServer = async () => {

@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 import { fromError } from "zod-validation-error/v4";
-import { logger } from "./logger";
+import { logger } from "./logger.utils";
 
 export const validator = {
   email: (email: string) => {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as registerService from "../services/register.service";
-import { logger } from "../utils/logger";
+import { logger } from "../utils/logger.utils";
 
 export const postUser = async (req: Request, res: Response): Promise<void> => {
   try {

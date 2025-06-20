@@ -1,7 +1,10 @@
 import { client, mainDb } from "../config/database.config";
 import { User, UserRegister } from "../models/user.model";
-import { logger } from "../utils/logger";
-import { validator } from "../utils/validators";
+import { logger } from "../utils/logger.utils";
+import { validator } from "../utils/validators.utils";
+
+//TODO Bcrypt password
+//TODO Either redirect to login or return JWT
 
 export const registerUser = async (user: UserRegister): Promise<User> => {
   try {
