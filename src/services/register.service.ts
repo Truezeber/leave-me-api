@@ -44,6 +44,11 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
       throw { message: "Email already exists", statusCode: 409 };
     }
 
+    if (await collection.findOne({ leave_me_id: user.leave_me_id })) {
+      logger.warn("LeaveMeID already exists");
+      throw { message: "LeaveMeID already exists", statusCode: 409 };
+    }
+
     logger.info("User:", user);
 
     const newUser: User = {
