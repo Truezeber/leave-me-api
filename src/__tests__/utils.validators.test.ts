@@ -61,16 +61,28 @@ describe("LeaveMeId validator", () => {
 });
 
 describe("Password validator", () => {
-  test("Valid password", () => {
-    expect(validator.password(Math.random().toString(16).slice(2, 10))).toBe(
-      true
-    );
+  test("Valid password with lower case letters", () => {
+    expect(validator.password("reallyvalidpassword")).toBe(true);
+  });
+
+  test("Valid password with upper case letters", () => {
+    expect(validator.password("ReallyValidPassword")).toBe(true);
+  });
+
+  test("Valid password with special characters", () => {
+    expect(validator.password("re@llyv@lidp@ssw()rd")).toBe(true);
+  });
+
+  test("Valid password with numbers", () => {
+    expect(validator.password("r3a11yvalidpassw0rd")).toBe(true);
+  });
+
+  test("Valid password with combined characters", () => {
+    expect(validator.password("ReallyValidPassword@#123")).toBe(true);
   });
 
   test("Too short", () => {
-    expect(validator.password(Math.random().toString(16).slice(2, 6))).toBe(
-      false
-    );
+    expect(validator.password("InPas")).toBe(false);
   });
 });
 
