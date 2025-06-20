@@ -18,4 +18,22 @@ export const validator = {
       return false;
     }
   },
+  leaveMeId: (id: string) => {
+    logger.info(`Validating LeaveMeId: `, id);
+    const schema = z
+      .string({ error: "Not a string!" })
+      .min(4, { error: "Too short!" })
+      .max(11, { error: "Too long!" })
+      .startsWith("@", { error: "Doesn't start with @!" });
+
+    try {
+      schema.parse(id);
+      logger.success(`LeaveMeId is valid: `, id);
+      return true;
+    } catch (error) {
+      const validationError = fromError(error);
+      logger.error(validationError.toString(), id);
+      return false;
+    }
+  },
 };
