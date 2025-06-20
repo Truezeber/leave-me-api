@@ -111,3 +111,53 @@ describe("Nickname validator", () => {
     expect(validator.nickname("In")).toBe(false);
   });
 });
+
+describe("URL validator", () => {
+  test("Valid URL", () => {
+    expect(validator.url("https://www.google.com")).toBe(true);
+  });
+
+  test("Valid URL with port", () => {
+    expect(validator.url("https://www.google.com:8080")).toBe(true);
+  });
+
+  test("Valid URL with path", () => {
+    expect(validator.url("https://www.google.com/path")).toBe(true);
+  });
+
+  test("Valid URL with query", () => {
+    expect(validator.url("https://www.google.com/path?query")).toBe(true);
+  });
+
+  test("Valid URL with fragment", () => {
+    expect(validator.url("https://www.google.com/path?query#fragment")).toBe(
+      true
+    );
+  });
+
+  test("Valid URL with file", () => {
+    expect(validator.url("https://www.google.com/path/file.png")).toBe(true);
+  });
+
+  test("Valid URL with port, path, query, and fragment", () => {
+    expect(
+      validator.url("https://www.google.com:8080/path?query#fragment")
+    ).toBe(true);
+  });
+
+  test("Valid HTTP URL", () => {
+    expect(validator.url("http://www.google.com")).toBe(true);
+  });
+
+  test("Valid FTP URL", () => {
+    expect(validator.url("ftp://www.google.com")).toBe(true);
+  });
+
+  test("Valid URL with / at the end", () => {
+    expect(validator.url("https://www.google.com/")).toBe(true);
+  });
+
+  test("Invalid URL", () => {
+    expect(validator.url("www.google.com")).toBe(false);
+  });
+});
