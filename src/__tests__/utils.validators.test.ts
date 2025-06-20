@@ -59,3 +59,17 @@ describe("LeaveMeId validator", () => {
     expect(validator.leaveMeId("@ThisIsTooLongID#1")).toBe(false);
   });
 });
+
+describe("Password validator", () => {
+  test("Valid password", () => {
+    expect(validator.password(Math.random().toString(16).slice(2, 10))).toBe(
+      true
+    );
+  });
+
+  test("Too short", () => {
+    expect(validator.password(Math.random().toString(16).slice(2, 6))).toBe(
+      false
+    );
+  });
+});
