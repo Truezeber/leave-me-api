@@ -20,6 +20,7 @@ export const validator = {
   },
   leaveMeId: (id: string) => {
     logger.info(`Validating LeaveMeId: `, id);
+
     const schema = z
       .string({ error: "Not a string!" })
       .min(4, { error: "Too short!" })
