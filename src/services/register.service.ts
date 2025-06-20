@@ -7,32 +7,32 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
   try {
     if (!client) {
       logger.warn("Database client is not available");
-      throw new Error("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
     }
 
     if (!validator.email(user.email)) {
       logger.warn("Invalid email");
-      throw new Error("Invalid email");
+      throw { message: "Invalid email", statusCode: 400 };
     }
 
     if (!validator.password(user.password)) {
       logger.warn("Invalid password");
-      throw new Error("Invalid password");
+      throw { message: "Invalid password", statusCode: 400 };
     }
 
     if (!validator.nickname(user.nickname)) {
       logger.warn("Invalid nickname");
-      throw new Error("Invalid nickname");
+      throw { message: "Invalid nickname", statusCode: 400 };
     }
 
     if (!validator.url(user.avatar_url)) {
       logger.warn("Invalid avatar url");
-      throw new Error("Invalid avatar url");
+      throw { message: "Invalid avatar url", statusCode: 400 };
     }
 
     if (!validator.leaveMeId(user.leave_me_id)) {
-      logger.warn("Invalid LeaveMeId");
-      throw new Error("Invalid LeaveMeId");
+      logger.warn("Invalid LeaveMeID");
+      throw { message: "Invalid LeaveMeID", statusCode: 400 };
     }
 
     const collection = mainDb.collection("users");
