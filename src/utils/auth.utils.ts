@@ -16,8 +16,12 @@ export const auth = {
       expiresIn: "1h",
     });
   },
-  verifyJwt(token: string): JwtPayload {
-    return jwt.verify(token, config.jwtSecret as string) as JwtPayload;
+  verifyJwt(token: string): JwtPayload | null {
+    try {
+      return jwt.verify(token, config.jwtSecret as string) as JwtPayload;
+    } catch {
+      return null;
+    }
   },
   generateRefreshToken(): string {
     return randomBytes(64).toString("hex");
