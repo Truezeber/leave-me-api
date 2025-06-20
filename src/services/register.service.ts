@@ -80,11 +80,14 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
       logger.error("Failed to insert user");
       throw new Error("Failed to insert user");
     }
-    logger.info(`User registered successfully with ID: ${result.insertedId}`);
+    logger.success(
+      `User registered successfully with ID: ${result.insertedId}`
+    );
 
     const createdUser = await collection.findOne({ _id: result.insertedId });
 
     if (!createdUser) {
+      logger.warn("User was created but could not be retrieved");
       throw new Error("User was created but could not be retrieved");
     }
 
