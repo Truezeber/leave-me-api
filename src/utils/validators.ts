@@ -37,4 +37,5 @@ export const validator = {
       return false;
     }
   },
+  password: (password: string) => {
 };
