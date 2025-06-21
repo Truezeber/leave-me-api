@@ -6,7 +6,7 @@ import { validator } from "../utils/validators.utils";
 
 //TODO Either redirect to login or return JWT
 
-export const registerUser = async (user: UserRegister): Promise<User> => {
+export const registerUser = async (user: UserRegister): Promise<string[]> => {
   try {
     if (!client) {
       logger.warn("Database client is not available");
@@ -88,14 +88,10 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
       `User registered successfully with ID: ${result.insertedId}`
     );
 
-    const createdUser = await collection.findOne({ _id: result.insertedId });
+    const refreshToken = newUser.refresh_tokens[0];
+    const accessToken = auth.generateJwt({ leave_me_id: newUser.leave_me_id });
 
-    if (!createdUser) {
-      logger.warn("User was created but could not be retrieved");
-      throw new Error("User was created but could not be retrieved");
-    }
-
-    return createdUser as unknown as User;
+    return [refreshToken, accessToken];
   } catch (error) {
     logger.error("Error registering user:", error);
     throw error;
