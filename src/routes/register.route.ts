@@ -36,9 +36,13 @@ const router = Router();
  *       200:
  *         description: User added successfully
  *       400:
+ *         description: Invalid data
+ *       409:
  *         description: User already exists
  *       500:
  *         description: Internal server error
+ *       503:
+ *         description: Database error
  */
 
 router.post("/", registerController.postUser);

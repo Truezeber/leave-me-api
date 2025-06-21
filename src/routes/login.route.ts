@@ -26,11 +26,13 @@ const router = Router();
  *               type: boolean
  *     responses:
  *       200:
- *         description: kod 200
- *       400:
- *         description: kod 400
+ *         description: User loged successfully
+ *       401:
+ *         description: Invalid credentials
  *       500:
  *         description: Internal server error
+ *       503:
+ *         description: Database error
  */
 
 router.post("/", loginController.loginUser);
