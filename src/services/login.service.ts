@@ -14,7 +14,7 @@ export const loginUser = async (
       throw { message: "Database client is not available", statusCode: 503 };
     }
 
-    const collection = mainDb.collection("users");
+    const collection = mainDb.collection<User>("users");
     logger.info("Mongo collection", collection);
 
     const user: User = (await collection.findOne({
@@ -25,22 +25,27 @@ export const loginUser = async (
     logger.debug("password: ", password);
     const hashedPassword = await auth.hashPassword(password);
     logger.debug("Hashed password:", hashedPassword);
-    let response: string = "";
+    let response: string[] = ["", ""];
 
     if (
       user &&
       (await auth.comparePassword(password, user.password)) === true
     ) {
       logger.success("All good");
-      response = "Jest i zgodne";
-    } else if (user) {
-      logger.warn("Wrong password");
-      response = "Złe hasło";
+      response[1] = auth.generateJwt({ leave_me_id: leave_me_id });
+
+      if (remember_me) {
+        response[0] = auth.generateRefreshToken();
+        await collection.updateOne(
+          { leave_me_id: leave_me_id },
+          { $push: { refresh_tokens: response[0] } }
+        );
+      }
     } else {
-      logger.warn("User does not exist");
-      response = "Nie ma takiego użytkownika";
+      logger.warn("Wrong password");
+      throw { message: "Invalid credentials", statusCode: 401 };
     }
-    return [response];
+    return response;
   } catch (error) {
     logger.error("Error registering user:", error);
     throw error;
