@@ -1,9 +1,9 @@
 import { client, mainDb } from "../config/database.config";
 import { User, UserRegister } from "../models/user.model";
+import { auth } from "../utils/auth.utils";
 import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
 
-//TODO Bcrypt password
 //TODO Either redirect to login or return JWT
 
 export const registerUser = async (user: UserRegister): Promise<User> => {
@@ -56,7 +56,7 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
 
     const newUser: User = {
       email: user.email,
-      password: user.password,
+      password: await auth.hashPassword(user.password),
       nickname: user.nickname,
       leave_me_id: user.leave_me_id,
       avatar_url: user.avatar_url,
