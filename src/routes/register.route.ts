@@ -14,32 +14,32 @@ const router = Router();
  *       - application/json
  *     parameters:
  *       - in: body
-*         name: body
-*         schema:
-*           type: object
-*           properties:
-*             email:
-*               type: string
-*             password:
-*               type: string
-*             nickname:
-*               type: string
-*             leave_me_id:
-*               type: string
-*             avatar_url:
-*               type: string
-*             tos_accepted:
-*               type: boolean
-*             pp_accepted:
-*               type: boolean
-*     responses:
-*       200:
-*         description: User added successfully
-*       400:
-*         description: User already exists
-*       500:
-*         description: Internal server error
-*/
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             nickname:
+ *               type: string
+ *             leave_me_id:
+ *               type: string
+ *             avatar_url:
+ *               type: string
+ *             tos_accepted:
+ *               type: boolean
+ *             pp_accepted:
+ *               type: boolean
+ *     responses:
+ *       200:
+ *         description: User added successfully
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Internal server error
+ */
 
 router.post("/", registerController.postUser);
 
