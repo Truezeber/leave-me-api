@@ -36,7 +36,7 @@ export const registerUser = async (user: UserRegister): Promise<string[]> => {
       throw { message: "Invalid LeaveMeID", statusCode: 400 };
     }
 
-    const collection = mainDb.collection("users");
+    const collection = mainDb.collection<User>("users");
 
     logger.info("Mongo collection", collection);
 
