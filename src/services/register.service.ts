@@ -4,8 +4,6 @@ import { auth } from "../utils/auth.utils";
 import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
 
-//TODO Either redirect to login or return JWT
-
 export const registerUser = async (user: UserRegister): Promise<string[]> => {
   try {
     if (!client) {
