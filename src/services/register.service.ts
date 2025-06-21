@@ -74,6 +74,7 @@ export const registerUser = async (user: UserRegister): Promise<User> => {
       is_banned: false,
       is_admin: false,
       join_date: new Date(),
+      refresh_tokens: [auth.generateRefreshToken()],
     };
     logger.info("Registering user:", newUser);
 

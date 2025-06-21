@@ -20,6 +20,7 @@ export interface User {
   tos_accepted: boolean;
   pp_accepted: boolean;
   join_date: Date;
+  refresh_tokens: string[];
 }
 
 export interface UserRegister {
