@@ -8,7 +8,7 @@ const router = Router();
  *
  * /api/register:
  *   post:
- *     summary: adds new user to database.
+ *     summary: Registers new user.
  *     tags: [Users]
  *     produces:
  *       - application/json
