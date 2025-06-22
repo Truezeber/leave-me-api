@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import * as registerService from "../services/register.service";
 import { logger } from "../utils/logger.utils";
-import { strict } from "assert";
-import { success } from "zod/v4";
 
 export const postUser = async (req: Request, res: Response): Promise<void> => {
   try {

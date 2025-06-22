@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "./config/app.config";
 import { logger } from "./utils/logger.utils";
 import { initializeApp } from "./loaders";
+import cookieParser from "cookie-parser";
 
 if (config.jwtSecret === "NO_JWT") {
   logger.error(
@@ -14,6 +15,8 @@ if (config.jwtSecret === "NO_JWT") {
 const startServer = async () => {
   const app = express();
   const PORT = config.port;
+
+  app.use(cookieParser());
 
   await initializeApp(app);
 
