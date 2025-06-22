@@ -10,7 +10,7 @@ export const handleAuth = (req: Request, res: Response, next: NextFunction) => {
     const payload = auth.verifyJwt(accessToken);
     if (payload) {
       logger.info("Access token verified");
-      (req as any).user = payload;
+      (req as any).user = payload.leave_me_id;
       next();
     } else {
       logger.info("Access token not verified");

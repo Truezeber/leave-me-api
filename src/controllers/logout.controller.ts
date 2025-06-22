@@ -11,7 +11,7 @@ export const logoutUser = async (
 
     const [refreshToken, leaveMeId] = [
       req.cookies.refresh_token,
-      (req as any).user.leave_me_id, //* Retarded but who'll stop me
+      (req as any).user, //* Retarded but who'll stop me
     ];
 
     logoutService.logoutUser(leaveMeId, refreshToken);
@@ -19,7 +19,6 @@ export const logoutUser = async (
     res.status(200).json({
       message: "Logout done",
       refresh_token: refreshToken,
-      leave_me_id: (req as any).user.leave_me_id, //* Retarded but who'll stop me
     });
   } catch (error: any) {
     const status = error.statusCode || 500;
