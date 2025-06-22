@@ -8,7 +8,7 @@ const router = Router();
  *
  * /api/login:
  *   post:
- *     summary: adds new user to database.
+ *     summary: Logs existing user in.
  *     tags: [Users]
  *     produces:
  *       - application/json
