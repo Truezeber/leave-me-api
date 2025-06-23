@@ -16,10 +16,22 @@ export const logoutUser = async (
 
     logoutService.logoutUser(leaveMeId, refreshToken);
 
-    res.status(200).json({
-      message: "Logout done",
-      refresh_token: refreshToken,
-    });
+    res
+      .status(200)
+      .clearCookie("access_token", {
+        httpOnly: true,
+        //secure: true, //! <- uncomment before deploy
+        sameSite: "strict",
+      })
+      .clearCookie("refresh_token", {
+        httpOnly: true,
+        //secure: true, //! <- uncomment before deploy
+        sameSite: "strict",
+      })
+      .json({
+        message: "Logout done",
+        refresh_token: refreshToken,
+      });
   } catch (error: any) {
     const status = error.statusCode || 500;
     res.status(status).json({
