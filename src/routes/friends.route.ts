@@ -5,7 +5,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /friends/invite:
+ * /api/friends/invite:
  *   post:
  *     summary: Sends an invite to a friend.
  *     tags: [Friends]
