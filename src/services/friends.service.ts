@@ -1,6 +1,7 @@
 import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { logger } from "../utils/logger.utils";
+import { relations } from "../utils/relations.utils";
 
 export const inviteFriend = async (
   leave_me_id: string,
@@ -19,6 +20,40 @@ export const inviteFriend = async (
       leave_me_id: leave_me_id,
     })) as User;
     logger.info("User:", user);
+
+    const friend: User = (await collection.findOne({
+      leave_me_id: friend_lid,
+    })) as User;
+    logger.info("Friend:", friend);
+
+    if (!friend) {
+      throw { message: "Invalid friend ID", statusCode: 404 };
+    }
+
+    const alreadyFriends = await relations.areFriends(leave_me_id, friend_lid);
+    if (alreadyFriends) {
+      throw { message: "Already friends", statusCode: 409 };
+    }
+
+    const userBlocked = await relations.isBlocked(friend_lid, leave_me_id);
+    if (userBlocked) {
+      throw { message: "You are blocked by this user", statusCode: 403 };
+    }
+
+    const friendBlocked = await relations.isBlocked(leave_me_id, friend_lid);
+    if (friendBlocked) {
+      throw { message: "You are blocking this user", statusCode: 403 };
+    }
+
+    const isInviting = await relations.isInviting(leave_me_id, friend_lid);
+    if (isInviting) {
+      throw { message: "Invite already sent", statusCode: 409 };
+    }
+
+    const isInvited = await relations.isInvited(leave_me_id, friend_lid);
+    if (isInvited) {
+      throw { message: "This user already invited you", statusCode: 409 };
+    }
 
     await collection.updateOne(
       { leave_me_id: leave_me_id },
