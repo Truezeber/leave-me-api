@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as friendsController from "../controllers/friends.controller"
-import { handleAuth } from "../middlewares/auth.middleware.js";
+import * as friendsController from "../controllers/friends.controller";
+import { handleAuth } from "../middlewares/auth.middleware";
 const router = Router();
 /**
  * @swagger
