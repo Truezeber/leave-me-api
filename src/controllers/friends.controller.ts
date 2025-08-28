@@ -30,3 +30,30 @@ export const inviteFriend = async (
     })
   }
 }
+
+export const acceptFriend = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/friends/accept - Accepting friend");
+
+    const [userLid, friendLid] = [
+      (req as any).user,
+      req.body.friendLid
+    ];
+
+    await friendsService.acceptFriend(userLid, friendLid);
+
+    res
+      .status(200)
+      .json({
+        message: "Invite accepted successfully"
+      });
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status.json({
+      error: error.message || "Something went wrong",
+    }))
+  }
+}

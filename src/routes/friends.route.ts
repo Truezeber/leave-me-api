@@ -36,4 +36,34 @@ const router = Router();
 
 router.post("/invite", handleAuth, friendsController.inviteFriend);
 
+/**
+ * @swagger
+ *
+ * /api/friends/accept:
+ *   post:
+ *     summary: Accept invite to a friend.
+ *     tags: [Friends]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             friendLid:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Invite accepted successfully
+ *       404:
+ *         description: Invite not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/accept", handleAuth, friendsController.acceptFriend);
+
 export default router;
