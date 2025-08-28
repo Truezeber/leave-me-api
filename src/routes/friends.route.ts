@@ -96,5 +96,35 @@ router.post("/accept", handleAuth, friendsController.acceptFriend);
 
 router.post("/reject", handleAuth, friendsController.rejectFriend);
 
+/**
+ * @swagger
+ *
+ * /api/friends/cancel:
+ *   post:
+ *     summary: Cancel invite to a friend.
+ *     tags: [Friends]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             friendLid:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Invite canceled successfully
+ *       404:
+ *         description: Invite not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/cancel", handleAuth, friendsController.cancelInvite);
+
 
 export default router;

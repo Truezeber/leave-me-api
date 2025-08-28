@@ -84,3 +84,30 @@ export const rejectFriend = async (
     }))
   }
 }
+
+export const cancelInvite = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/friends/cancel - Canceling invite");
+
+    const [userLid, friendLid] = [
+      (req as any).user,
+      req.body.friendLid
+    ];
+
+    await friendsService.cancelInvite(userLid, friendLid);
+
+    res
+      .status(200)
+      .json({
+        message: "Invite canceled successfully"
+      });
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status.json({
+      error: error.message || "Something went wrong",
+    }))
+  }
+}
