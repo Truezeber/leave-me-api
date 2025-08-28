@@ -66,4 +66,35 @@ router.post("/invite", handleAuth, friendsController.inviteFriend);
 
 router.post("/accept", handleAuth, friendsController.acceptFriend);
 
+/**
+ * @swagger
+ *
+ * /api/friends/reject:
+ *   post:
+ *     summary: Reject invite to a friend.
+ *     tags: [Friends]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             friendLid:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Invite rejected successfully
+ *       404:
+ *         description: Invite not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/reject", handleAuth, friendsController.rejectFriend);
+
+
 export default router;

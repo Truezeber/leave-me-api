@@ -57,3 +57,30 @@ export const acceptFriend = async (
     }))
   }
 }
+
+export const rejectFriend = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/friends/reject - Rejecting friend");
+
+    const [userLid, friendLid] = [
+      (req as any).user,
+      req.body.friendLid
+    ];
+
+    await friendsService.rejectFriend(userLid, friendLid);
+
+    res
+      .status(200)
+      .json({
+        message: "Invite rejected successfully"
+      });
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status.json({
+      error: error.message || "Something went wrong",
+    }))
+  }
+}

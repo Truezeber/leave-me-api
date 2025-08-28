@@ -117,3 +117,48 @@ export const acceptFriend = async (
     throw error;
   }
 };
+
+export const rejectFriend = async (
+  leave_me_id: string,
+  friend_lid: string
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+    logger.info("Mongo collection", collection);
+
+    const user: User = (await collection.findOne({
+      leave_me_id: leave_me_id,
+    })) as User;
+    logger.info("User:", user);
+
+    const isInvited = await relations.isInvited(leave_me_id, friend_lid);
+    if (!isInvited) {
+      throw { message: "This user is not inviting you", statusCode: 404 };
+    }
+
+    await collection.updateOne(
+      { leave_me_id: leave_me_id },
+      {
+        $pull: { invites_sent: friend_lid },
+      }
+    );
+
+    await collection.updateOne(
+      { leave_me_id: friend_lid },
+      {
+        $pull: { invites_get: leave_me_id },
+      }
+    );
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error rejecting invite:", error);
+    throw error;
+  }
+};
+
