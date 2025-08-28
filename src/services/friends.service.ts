@@ -98,7 +98,7 @@ export const acceptFriend = async (
     await collection.updateOne(
       { leave_me_id: leave_me_id },
       {
-        $pull: { invites_sent: friend_lid },
+        $pull: { invites_get: friend_lid },
         $addToSet: { friends: friend_lid }
       }
     );
@@ -106,7 +106,7 @@ export const acceptFriend = async (
     await collection.updateOne(
       { leave_me_id: friend_lid },
       {
-        $pull: { invites_get: leave_me_id },
+        $pull: { invites_sent: leave_me_id },
         $addToSet: { friends: leave_me_id }
       }
     );
@@ -144,14 +144,14 @@ export const rejectFriend = async (
     await collection.updateOne(
       { leave_me_id: leave_me_id },
       {
-        $pull: { invites_sent: friend_lid },
+        $pull: { invites_get: friend_lid },
       }
     );
 
     await collection.updateOne(
       { leave_me_id: friend_lid },
       {
-        $pull: { invites_get: leave_me_id },
+        $pull: { invites_sent: leave_me_id },
       }
     );
 
