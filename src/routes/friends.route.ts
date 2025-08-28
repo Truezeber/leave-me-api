@@ -27,7 +27,7 @@ const router = Router();
  *       404:
  *         description: Target user not found
  *       409:
- *         descritpion: Alreagy friends, invite already sent or recieved invite from this user
+ *         descritpion: Already friends, invite already sent or recieved invite from this user
  *       500:
  *         description: Internal server error
  *       503:

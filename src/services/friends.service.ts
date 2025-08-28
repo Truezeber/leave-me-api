@@ -113,7 +113,7 @@ export const acceptFriend = async (
 
     return "Success";
   } catch (error) {
-    logger.error("Error inviting friend:", error);
+    logger.error("Error accepting friend:", error);
     throw error;
   }
 };
