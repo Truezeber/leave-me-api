@@ -273,3 +273,27 @@ export const getFriendsList = async (
     throw error;
   }
 };
+
+export const getInvitesSentList = async (
+  leave_me_id: string
+): Promise<string[]> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+    logger.info("Mongo collection", collection);
+
+    const user = (await collection.findOne(
+      { leave_me_id: leave_me_id },
+      { projection: { invites_sent: 1 } }
+    ));
+
+    return user?.invites_sent || [];
+  } catch (error) {
+    logger.error("Error fetching invites sent list:", error);
+    throw error;
+  }
+};

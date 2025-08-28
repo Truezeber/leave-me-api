@@ -184,4 +184,33 @@ router.post("/delete", handleAuth, friendsController.deleteFriend);
  */
 
 router.get("/friends-list", handleAuth, friendsController.getFriendsList);
+
+/**
+ * @swagger
+ *
+ * /api/friends/invites-sent-list:
+ *   get:
+ *     summary: Get sent invites list.
+ *     tags: [Friends]
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Sent invites list fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 friends:
+ *                   type: arrau
+ *                   items:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.get("/invites-sent-list", handleAuth, friendsController.getInvitesSentList);
 export default router;

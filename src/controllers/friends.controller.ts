@@ -162,3 +162,27 @@ export const getFriendsList = async (
     }))
   }
 }
+
+export const getInvitesSentList = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("GET /api/friends/invites-sent-list - Getting invites sent list");
+
+    const userLid = (req as any).user;
+
+    const list = (await friendsService.getInvitesSentList(userLid));
+
+    res
+      .status(200)
+      .json({
+        friends: list
+      });
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status.json({
+      error: error.message || "Something went wrong",
+    }))
+  }
+}
