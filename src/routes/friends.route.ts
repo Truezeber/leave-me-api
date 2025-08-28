@@ -174,7 +174,7 @@ router.post("/delete", handleAuth, friendsController.deleteFriend);
  *               type: object
  *               properties:
  *                 friends:
- *                   type: arrau
+ *                   type: array
  *                   items:
  *                     type: string
  *       500:
@@ -203,7 +203,7 @@ router.get("/friends-list", handleAuth, friendsController.getFriendsList);
  *               type: object
  *               properties:
  *                 friends:
- *                   type: arrau
+ *                   type: array
  *                   items:
  *                     type: string
  *       500:
@@ -232,7 +232,7 @@ router.get("/invites-sent-list", handleAuth, friendsController.getInvitesSentLis
  *               type: object
  *               properties:
  *                 friends:
- *                   type: arrau
+ *                   type: array
  *                   items:
  *                     type: string
  *       500:
