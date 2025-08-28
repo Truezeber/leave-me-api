@@ -126,7 +126,6 @@ router.post("/reject", handleAuth, friendsController.rejectFriend);
 
 router.post("/cancel", handleAuth, friendsController.cancelInvite);
 
-
 /**
  * @swagger
  *
@@ -156,4 +155,33 @@ router.post("/cancel", handleAuth, friendsController.cancelInvite);
  */
 
 router.post("/delete", handleAuth, friendsController.deleteFriend);
+
+/**
+ * @swagger
+ *
+ * /api/friends/friends-list:
+ *   get:
+ *     summary: Get friends list.
+ *     tags: [Friends]
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Friends list fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 friends:
+ *                   type: arrau
+ *                   items:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.get("/friends-list", handleAuth, friendsController.getFriendsList);
 export default router;

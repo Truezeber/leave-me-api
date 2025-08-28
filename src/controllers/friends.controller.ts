@@ -138,3 +138,27 @@ export const deleteFriend = async (
     }))
   }
 }
+
+export const getFriendsList = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("GET /api/friends/friends-list - Getting friends list");
+
+    const userLid = (req as any).user;
+
+    const list = (await friendsService.getFriendsList(userLid));
+
+    res
+      .status(200)
+      .json({
+        friends: list
+      });
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status.json({
+      error: error.message || "Something went wrong",
+    }))
+  }
+}

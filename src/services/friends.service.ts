@@ -249,3 +249,27 @@ export const deleteFriend = async (
     throw error;
   }
 };
+
+export const getFriendsList = async (
+  leave_me_id: string
+): Promise<string[]> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+    logger.info("Mongo collection", collection);
+
+    const user = (await collection.findOne(
+      { leave_me_id: leave_me_id },
+      { projection: { friends: 1 } }
+    ));
+
+    return user?.friends || [];
+  } catch (error) {
+    logger.error("Error fetching friends list:", error);
+    throw error;
+  }
+};
