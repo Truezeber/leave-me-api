@@ -213,4 +213,34 @@ router.get("/friends-list", handleAuth, friendsController.getFriendsList);
  */
 
 router.get("/invites-sent-list", handleAuth, friendsController.getInvitesSentList);
+
+/**
+ * @swagger
+ *
+ * /api/friends/invites-got-list:
+ *   get:
+ *     summary: Get got invites list.
+ *     tags: [Friends]
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Got invites list fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 friends:
+ *                   type: arrau
+ *                   items:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.get("/invites-got-list", handleAuth, friendsController.getInvitesGotList);
+
 export default router;
