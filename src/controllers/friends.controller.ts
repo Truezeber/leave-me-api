@@ -111,3 +111,30 @@ export const cancelInvite = async (
     }))
   }
 }
+
+export const deleteFriend = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/friends/delete - Deleting friend");
+
+    const [userLid, friendLid] = [
+      (req as any).user,
+      req.body.friendLid
+    ];
+
+    await friendsService.deleteFriend(userLid, friendLid);
+
+    res
+      .status(200)
+      .json({
+        message: "Friend deleted successfully"
+      });
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status.json({
+      error: error.message || "Something went wrong",
+    }))
+  }
+}

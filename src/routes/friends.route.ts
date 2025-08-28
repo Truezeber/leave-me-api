@@ -127,4 +127,33 @@ router.post("/reject", handleAuth, friendsController.rejectFriend);
 router.post("/cancel", handleAuth, friendsController.cancelInvite);
 
 
+/**
+ * @swagger
+ *
+ * /api/friends/delete:
+ *   post:
+ *     summary: Delete a friend.
+ *     tags: [Friends]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             friendLid:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Friend deleted successfully
+ *       404:
+ *         description: Friend not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/delete", handleAuth, friendsController.deleteFriend);
 export default router;
