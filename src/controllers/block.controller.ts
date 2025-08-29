@@ -1,0 +1,32 @@
+import { Request, Response } from "express";
+import { logger } from "../utils/logger.utils";
+
+import * as blockService from "../services/block.service";
+
+export const blockUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/block/block-user - Blocking user");
+
+    const [userLid, secondUserLid] = [
+      (req as any).user,
+      req.body.blockLid
+    ];
+
+    await blockService.blockUser(userLid, secondUserLid);
+
+    res
+      .status(200)
+      .json({
+        message: "User blocked succesfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
