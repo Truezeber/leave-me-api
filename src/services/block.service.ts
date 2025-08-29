@@ -90,4 +90,28 @@ export const unblockUser = async (
   }
 }
 
+export const getBlocks = async (
+  leave_me_id: string,
+): Promise<string[]> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+    logger.info("Mongo collection", collection);
+
+    const user: User = (await collection.findOne({
+      leave_me_id: leave_me_id,
+    })) as User;
+    logger.info("User:", user);
+
+    return user.blocked;
+  } catch (error) {
+    logger.error("Error unblocking user:", error);
+    throw error;
+  }
+}
+
 
