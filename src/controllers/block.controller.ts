@@ -30,3 +30,31 @@ export const blockUser = async (
     })
   }
 }
+
+export const unblockUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/block/unblock-user - Unblocking user");
+
+    const [userLid, secondUserLid] = [
+      (req as any).user,
+      req.body.blockLid
+    ];
+
+    await blockService.unblockUser(userLid, secondUserLid);
+
+    res
+      .status(200)
+      .json({
+        message: "User unblocked succesfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
