@@ -58,3 +58,28 @@ export const unblockUser = async (
     })
   }
 }
+
+export const getBlocks = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/block/blocks - Getting blocks");
+
+    const userLid = (req as any).user;
+
+    const list = (await blockService.getBlocks(userLid));
+
+    res
+      .status(200)
+      .json({
+        blocks: list
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
