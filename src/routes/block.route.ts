@@ -60,7 +60,7 @@ router.post("/block-user", handleAuth, blocksController.blockUser);
  *         description: Database error
  */
 
-router.post("/accept", handleAuth, blocksController.unblockUser);
+router.post("/unblock-user", handleAuth, blocksController.unblockUser);
 
 /**
  * @swagger
