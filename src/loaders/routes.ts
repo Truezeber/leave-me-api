@@ -6,9 +6,9 @@ import friendsRouter from "../routes/friends.route";
 import blockRouter from "../routes/block.route"
 
 export const setupRoutes = (app: Application): void => {
-  app.use("/api/register", registerRouter);
-  app.use("/api/login", loginRouter);
-  app.use("/api/logout", logoutRouter);
-  app.use("/api/friends", friendsRouter);
-  app.use("/api/block", blockRouter);
+  app.use("/api/v1/register", registerRouter);
+  app.use("/api/v1/login", loginRouter);
+  app.use("/api/v1/logout", logoutRouter);
+  app.use("/api/v1/friends", friendsRouter);
+  app.use("/api/v1/block", blockRouter);
 };
