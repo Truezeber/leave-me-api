@@ -7,7 +7,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/logout:
+ * /api/v1/logout:
  *   post:
  *     summary: Logs out the user and clears JWT and refresh token cookies
  *     tags: [Users]
