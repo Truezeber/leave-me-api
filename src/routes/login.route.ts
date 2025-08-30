@@ -6,7 +6,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/login:
+ * /api/v1/login:
  *   post:
  *     summary: Logs existing user in.
  *     tags: [Users]
