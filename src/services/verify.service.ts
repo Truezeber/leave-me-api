@@ -24,9 +24,10 @@ export const requestSignup = async (user: UserConfirmation): Promise<string> => 
       throw { message: "Email already exists", statusCode: 409 };
     }
 
+    const pin = `${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
     const newConfirmation: UserConfirmation = {
       email: user.email,
-      pin: await auth.hashPassword(`${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`),
+      pin: await auth.hashPassword(pin),
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
       verified: false
     };
