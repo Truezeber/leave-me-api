@@ -12,6 +12,14 @@ if (config.jwtSecret === "NO_JWT") {
   process.exit(1);
 }
 
+if (config.resendKey === "NO_RESEND") {
+  logger.error(
+    "\x1b[1m\x1b[31m%s\x1b[0m",
+    "RESEND_KEY is NOT set! Killing the app. Set RESEND_KEY in .env and launch again."
+  );
+  process.exit(1);
+}
+
 const startServer = async () => {
   const app = express();
   const PORT = config.port;

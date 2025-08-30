@@ -5,14 +5,14 @@ import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
 import { email } from "../utils/emails.utils";
 
-export const requestSignup = async (user: UserConfirmation): Promise<string> => { //function props should be sexier
+export const requestSignup = async (userEmail: string): Promise<string> => { //function props should be sexier
   try {
     if (!client) {
       logger.warn("Database client is not available");
       throw { message: "Database client is not available", statusCode: 503 };
     }
 
-    if (!validator.email(user.email)) {
+    if (!validator.email(userEmail)) {
       logger.warn("Invalid email");
       throw { message: "Invalid email", statusCode: 400 };
     }
@@ -20,14 +20,14 @@ export const requestSignup = async (user: UserConfirmation): Promise<string> => 
     const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
     const usersCollection = mainDb.collection<User>("users");
 
-    if (await confirmationCollection.findOne({ email: user.email }) || await usersCollection.findOne({ email: user.email })) {
+    if (await confirmationCollection.findOne({ email: userEmail }) || await usersCollection.findOne({ email: userEmail })) {
       logger.warn("Email already exists");
       throw { message: "Email already exists", statusCode: 409 };
     }
 
     const pin = `${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
     const newConfirmation: UserConfirmation = {
-      email: user.email,
+      email: userEmail,
       pin: await auth.hashPassword(pin),
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
       verified: false
@@ -44,7 +44,7 @@ export const requestSignup = async (user: UserConfirmation): Promise<string> => 
       `User confirmation registered ${result}`
     );
 
-    const { data, error } = await email.sendPin(user.email, pin);
+    const { data, error } = await email.sendPin(userEmail, pin);
 
     if (error) {
       throw { message: error, statusCode: 400 };
