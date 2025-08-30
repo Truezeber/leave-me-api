@@ -5,7 +5,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/friends/invite:
+ * /api/v1/friends/invite:
  *   post:
  *     summary: Sends an invite to a friend.
  *     tags: [Friends]
@@ -39,7 +39,7 @@ router.post("/invite", handleAuth, friendsController.inviteFriend);
 /**
  * @swagger
  *
- * /api/friends/accept:
+ * /api/v1/friends/accept:
  *   post:
  *     summary: Accept invite to a friend.
  *     tags: [Friends]
@@ -69,7 +69,7 @@ router.post("/accept", handleAuth, friendsController.acceptFriend);
 /**
  * @swagger
  *
- * /api/friends/reject:
+ * /api/v1/friends/reject:
  *   post:
  *     summary: Reject invite to a friend.
  *     tags: [Friends]
@@ -99,7 +99,7 @@ router.post("/reject", handleAuth, friendsController.rejectFriend);
 /**
  * @swagger
  *
- * /api/friends/cancel:
+ * /api/v1/friends/cancel:
  *   post:
  *     summary: Cancel invite to a friend.
  *     tags: [Friends]
@@ -129,7 +129,7 @@ router.post("/cancel", handleAuth, friendsController.cancelInvite);
 /**
  * @swagger
  *
- * /api/friends/delete:
+ * /api/v1/friends/delete:
  *   post:
  *     summary: Delete a friend.
  *     tags: [Friends]
@@ -159,7 +159,7 @@ router.post("/delete", handleAuth, friendsController.deleteFriend);
 /**
  * @swagger
  *
- * /api/friends/friends-list:
+ * /api/v1/friends/friends-list:
  *   get:
  *     summary: Get friends list.
  *     tags: [Friends]
@@ -188,7 +188,7 @@ router.get("/friends-list", handleAuth, friendsController.getFriendsList);
 /**
  * @swagger
  *
- * /api/friends/invites-sent-list:
+ * /api/v1/friends/invites-sent-list:
  *   get:
  *     summary: Get sent invites list.
  *     tags: [Friends]
@@ -217,7 +217,7 @@ router.get("/invites-sent-list", handleAuth, friendsController.getInvitesSentLis
 /**
  * @swagger
  *
- * /api/friends/invites-got-list:
+ * /api/v1/friends/invites-got-list:
  *   get:
  *     summary: Get got invites list.
  *     tags: [Friends]
