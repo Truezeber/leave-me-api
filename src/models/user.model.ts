@@ -36,6 +36,7 @@ export interface UserRegister {
 export interface UserConfirmation {
   _id?: ObjectId;
   email: string;
+  pin: string;
   expiresAt: Date;
   verified: boolean;
 }
