@@ -3,6 +3,7 @@ import { UserConfirmation, User } from "../models/user.model";
 import { auth } from "../utils/auth.utils";
 import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
+import { email } from "../utils/emails.utils";
 
 export const requestSignup = async (user: UserConfirmation): Promise<string> => { //function props should be sexier
   try {
@@ -42,6 +43,15 @@ export const requestSignup = async (user: UserConfirmation): Promise<string> => 
     logger.success(
       `User confirmation registered ${result}`
     );
+
+    const { data, error } = await email.sendPin(user.email, pin);
+
+    if (error) {
+      throw { message: error, statusCode: 400 };
+    }
+
+    logger.debug(`Email: ${data}`);
+
     return "Success";
   } catch (error) {
     logger.error("Error registering user:", error);
