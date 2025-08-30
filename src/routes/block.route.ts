@@ -5,7 +5,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/block/block-user:
+ * /api/v1/block/block-user:
  *   post:
  *     summary: Blocks user.
  *     tags: [Blocks]
@@ -35,7 +35,7 @@ router.post("/block-user", handleAuth, blocksController.blockUser);
 /**
  * @swagger
  *
- * /api/block/unblock-user:
+ * /api/v1/block/unblock-user:
  *   post:
  *     summary: Unblocks user.
  *     tags: [Blocks]
@@ -65,7 +65,7 @@ router.post("/unblock-user", handleAuth, blocksController.unblockUser);
 /**
  * @swagger
  *
- * /api/block/blocks:
+ * /api/v1/block/blocks:
  *   get:
  *     summary: Get blocks list.
  *     tags: [Blocks]
