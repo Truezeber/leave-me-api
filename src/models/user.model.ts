@@ -32,3 +32,10 @@ export interface UserRegister {
   tos_accepted: boolean;
   pp_accepted: boolean;
 }
+
+export interface UserConfirmation {
+  _id?: ObjectId;
+  email: string;
+  expiresAt: Date;
+  verified: boolean;
+}
