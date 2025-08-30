@@ -6,7 +6,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/register:
+ * /api/v1/register:
  *   post:
  *     summary: Registers new user.
  *     tags: [Users]
