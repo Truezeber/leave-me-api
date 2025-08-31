@@ -152,7 +152,7 @@ export const confirmPin = async (userEmail: string, confirmPin: string): Promise
       throw { message: "User already verified", statusCode: 409 };
     }
 
-    if (Date.now() > user.expiresAt.getTime() || confirmPin !== user.pin) {
+    if (Date.now() > user.expiresAt.getTime() || !await auth.comparePassword(confirmPin, user.pin)) {
       logger.warn("PIN invalid or outdated");
       throw { message: "PIN is invalid or outdated", statusCode: 409 };
     }

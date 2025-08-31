@@ -103,5 +103,5 @@ router.post("/request-new-pin", verifyController.requestNewPin);
  *         description: Database error
  */
 
-router.post("/request-vefiry", verifyController.requestNewPin);
+router.post("/request-verify", verifyController.confirmPin);
 export default router;
