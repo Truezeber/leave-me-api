@@ -125,3 +125,48 @@ export const requestNewPin = async (userEmail: string): Promise<string> => { //f
     throw error;
   }
 };
+
+export const confirmPin = async (userEmail: string, confirmPin: string): Promise<string> => { //function props should be sexier
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    if (!validator.email(userEmail)) {
+      logger.warn("Invalid email");
+      throw { message: "Invalid email", statusCode: 400 };
+    }
+
+    const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
+
+    const user = await confirmationCollection.findOne({ email: userEmail });
+
+    if (!user) {
+      logger.warn("Email not registered yet");
+      throw { message: "Email not registered yet", statusCode: 404 };
+    }
+
+    if (user.verified) {
+      logger.warn("User already verified");
+      throw { message: "User already verified", statusCode: 409 };
+    }
+
+    if (Date.now() > user.expiresAt.getTime() || confirmPin !== user.pin) {
+      logger.warn("PIN invalid or outdated");
+      throw { message: "PIN is invalid or outdated", statusCode: 409 };
+    }
+
+    const result = await confirmationCollection.updateOne({ email: userEmail }, { $set: { verified: true } });
+
+    if (!result.acknowledged) {
+      logger.error("Failed to verify PIN");
+      throw new Error("Failed to verify PIN"); //TODO normal http error should be there
+    }
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error verifying PIN:", error);
+    throw error;
+  }
+};
