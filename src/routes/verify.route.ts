@@ -68,4 +68,40 @@ router.post("/request-signup", verifyController.requestSignup);
  */
 
 router.post("/request-new-pin", verifyController.requestNewPin);
+
+/**
+ * @swagger
+ *
+ * /api/v1/auth/request-verify:
+ *   post:
+ *     summary: Veryfi registration PIN.
+ *     tags: [Users]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             pin:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: New PIN sent
+ *       400:
+ *         description: Invalid email or provider problem
+ *       404:
+ *         description: E-mail not registered yet
+ *       409:
+ *         description: E-mail already verified or old PIN still valid
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/request-vefiry", verifyController.requestNewPin);
 export default router;
