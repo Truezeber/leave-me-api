@@ -35,4 +35,37 @@ const router = Router();
 
 router.post("/request-signup", verifyController.requestSignup);
 
+/**
+ * @swagger
+ *
+ * /api/v1/auth/request-new-pin:
+ *   post:
+ *     summary: Sends new PIN e-mail.
+ *     tags: [Users]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: New PIN sent
+ *       400:
+ *         description: Invalid email or provider problem
+ *       404:
+ *         description: E-mail not registered yet
+ *       409:
+ *         description: E-mail already verified or old PIN still valid
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/request-new-pin", verifyController.requestNewPin);
 export default router;
