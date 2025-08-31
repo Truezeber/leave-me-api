@@ -25,3 +25,26 @@ export const requestSignup = async (
     })
   }
 }
+
+export const requestNewPin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/auth/request-new-pin - Sending new PIN e-mail");
+
+    await verifyService.requestNewPin(req.body.email);
+
+    res
+      .status(200)
+      .json({
+        message: "New PIN e-mail sent"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
