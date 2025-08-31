@@ -86,7 +86,7 @@ export const requestNewPin = async (userEmail: string): Promise<string> => { //f
       throw { message: "Email not registered yet", statusCode: 404 };
     }
 
-    if (Date.now() > user.expiresAt.getTime()) {
+    if (Date.now() < user.expiresAt.getTime()) {
       logger.warn("Old PIN still valid");
       throw { message: "Old PIN still valid", statusCode: 409 };
     }
@@ -101,7 +101,7 @@ export const requestNewPin = async (userEmail: string): Promise<string> => { //f
 
     logger.info("New confirmation user:", newConfirmation);
 
-    const result = await confirmationCollection.updateOne({ email: userEmail }, { $set: { newConfirmation } });
+    const result = await confirmationCollection.updateOne({ email: userEmail }, { $set: newConfirmation });
 
     if (!result.acknowledged) {
       logger.error("Failed to insert new PIN");
