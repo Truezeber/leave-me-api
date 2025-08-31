@@ -53,7 +53,7 @@ router.post("/request-signup", verifyController.requestSignup);
  *             email:
  *               type: string
  *     responses:
- *       200:
+ *    200:
  *         description: New PIN sent
  *       400:
  *         description: Invalid email or provider problem
@@ -90,13 +90,13 @@ router.post("/request-new-pin", verifyController.requestNewPin);
  *               type: string
  *     responses:
  *       200:
- *         description: New PIN sent
+ *         description: E-mail verified
  *       400:
  *         description: Invalid email or provider problem
  *       404:
  *         description: E-mail not registered yet
  *       409:
- *         description: E-mail already verified or old PIN still valid
+ *         description: E-mail already verified or PIN invalid
  *       500:
  *         description: Internal server error
  *       503:
