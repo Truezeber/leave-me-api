@@ -58,3 +58,70 @@ export const requestSignup = async (userEmail: string): Promise<string> => { //f
     throw error;
   }
 };
+
+export const requestNewPin = async (userEmail: string): Promise<string> => { //function props should be sexier
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    if (!validator.email(userEmail)) {
+      logger.warn("Invalid email");
+      throw { message: "Invalid email", statusCode: 400 };
+    }
+
+    const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
+    const usersCollection = mainDb.collection<User>("users");
+
+    if (await usersCollection.findOne({ email: userEmail })) {
+      logger.warn("Email already verified");
+      throw { message: "Email already verified", statusCode: 409 };
+    }
+
+    const user = await confirmationCollection.findOne({ email: userEmail });
+
+    if (!user) {
+      logger.warn("Email not registered yet");
+      throw { message: "Email not registered yet", statusCode: 404 };
+    }
+
+    if (Date.now() > user.expiresAt.getTime()) {
+      logger.warn("Old PIN still valid");
+      throw { message: "Old PIN still valid", statusCode: 409 };
+    }
+
+    const pin = `${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
+    const newConfirmation: UserConfirmation = {
+      email: userEmail,
+      pin: await auth.hashPassword(pin),
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      verified: false
+    };
+
+    logger.info("New confirmation user:", newConfirmation);
+
+    const result = await confirmationCollection.updateOne({ email: userEmail }, { $set: { newConfirmation } });
+
+    if (!result.acknowledged) {
+      logger.error("Failed to insert new PIN");
+      throw new Error("Failed to insert new PIN"); //TODO normal http error should be there
+    }
+    logger.success(
+      `New PIN set ${result}`
+    );
+
+    const { data, error } = await email.sendPin(userEmail, pin);
+
+    if (error) {
+      throw { message: error, statusCode: 400 };
+    }
+
+    logger.debug(`Email: ${data}`);
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error sending PIN:", error);
+    throw error;
+  }
+};
