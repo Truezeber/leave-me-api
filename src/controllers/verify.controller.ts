@@ -54,7 +54,7 @@ export const confirmPin = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/v1/auth/request-new-pin - Sending new PIN e-mail");
+    logger.info("POST /api/v1/auth/request-verify - Verifying PIN");
 
     await verifyService.confirmPin(req.body.email, req.body.pin);
 
