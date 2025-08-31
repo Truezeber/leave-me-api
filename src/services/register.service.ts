@@ -1,5 +1,5 @@
 import { client, mainDb } from "../config/database.config";
-import { User, UserRegister } from "../models/user.model";
+import { User, UserConfirmation, UserRegister } from "../models/user.model";
 import { auth } from "../utils/auth.utils";
 import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
@@ -37,8 +37,11 @@ export const registerUser = async (user: UserRegister): Promise<string[]> => {
     }
 
     const collection = mainDb.collection<User>("users");
+    const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
+    const confirmedUser = await confirmationCollection.findOne({ email: user.email });
 
     logger.info("Mongo collection", collection);
+    logger.debug("ConfirmedUser: ", confirmedUser);
 
     if (await collection.findOne({ email: user.email })) {
       logger.warn("Email already exists");
@@ -48,6 +51,11 @@ export const registerUser = async (user: UserRegister): Promise<string[]> => {
     if (await collection.findOne({ leave_me_id: user.leave_me_id })) {
       logger.warn("LeaveMeID already exists");
       throw { message: "LeaveMeID already exists", statusCode: 409 };
+    }
+
+    if (!confirmedUser || !confirmedUser.verified) {
+      logger.warn("Email not verified");
+      throw { message: "Email not verified", statusCode: 409 };
     }
 
     logger.info("User:", user);

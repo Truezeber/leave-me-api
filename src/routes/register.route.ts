@@ -38,7 +38,7 @@ const router = Router();
  *       400:
  *         description: Invalid data
  *       409:
- *         description: User already exists
+ *         description: User already exists or e-mail is not verified
  *       500:
  *         description: Internal server error
  *       503:
