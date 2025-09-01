@@ -58,3 +58,32 @@ export const changeNickname = async (
     })
   }
 }
+
+export const changePassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/settings/change-password - Changing password");
+
+    const [userLid, password, newPassword] = [
+      (req as any).user,
+      req.body.password,
+      req.body.new_password
+    ];
+
+    await settingsService.changePassword(userLid, password, newPassword);
+
+    res
+      .status(200)
+      .json({
+        message: "Password changed successfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
