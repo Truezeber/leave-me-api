@@ -12,7 +12,7 @@ export const changeAvatar = async (
 
     const [userLid, avatarUrl] = [
       (req as any).user,
-      req.body.avatarUrl
+      req.body.avatar_url
     ];
 
     await settingsService.changeAvatar(userLid, avatarUrl);
