@@ -36,6 +36,11 @@ export const registerUser = async (user: UserRegister): Promise<string[]> => {
       throw { message: "Invalid LeaveMeID", statusCode: 400 };
     }
 
+    if (!user.pp_accepted || !user.tos_accepted) {
+      logger.warn("PP or TOS unaccepted");
+      throw { message: "Terms Of Service or Privacy Policy must be accepted", statusCode: 422 }
+    }
+
     const collection = mainDb.collection<User>("users");
     const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
     const confirmedUser = await confirmationCollection.findOne({ email: user.email });
