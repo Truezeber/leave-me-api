@@ -28,6 +28,36 @@ export const changeAvatar = async (
 
     return "Success";
   } catch (error) {
+    logger.error("Error changing avatar:", error);
+    throw error;
+  }
+};
+
+export const changeNickname = async (
+  leave_me_id: string,
+  nickname: string
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+    logger.info("Mongo collection", collection);
+
+    if (!validator.nickname(nickname)) {
+      logger.warn("Invalid nickname");
+      throw { message: "Invalid nickname", statusCode: 400 };
+    }
+
+    await collection.updateOne(
+      { leave_me_id: leave_me_id },
+      { $set: { nickname: nickname } }
+    );
+
+    return "Success";
+  } catch (error) {
     logger.error("Error inviting friend:", error);
     throw error;
   }
