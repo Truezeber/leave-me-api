@@ -67,7 +67,8 @@ export const changeNickname = async (
 
 export const changePassword = async (
   leave_me_id: string,
-  password: string
+  previousPassword: string,
+  newPassword: string
 ): Promise<string> => {
   try {
     if (!client) {
@@ -78,17 +79,29 @@ export const changePassword = async (
     const collection = mainDb.collection<User>("users");
     logger.info("Mongo collection", collection);
 
-    if (!validator.password(password)) {
+    if (!validator.password(newPassword)) {
       logger.warn("Invalid password");
       throw { message: "Invalid password", statusCode: 400 };
     }
 
-    const newPassword = await auth.hashPassword(password)
+    const user: User = (await collection.findOne({
+      leave_me_id: leave_me_id,
+    })) as User;
+    logger.info("User:", user);
 
-    await collection.updateOne(
-      { leave_me_id: leave_me_id },
-      { $set: { password: newPassword } }
-    );
+    if (
+      user &&
+      (await auth.comparePassword(previousPassword, user.password)) === true
+    ) {
+      const hashedPassword = await auth.hashPassword(newPassword);
+      await collection.updateOne(
+        { leave_me_id: leave_me_id },
+        { $set: { password: hashedPassword } }
+      );
+    } else {
+      logger.warn("Wrong password");
+      throw { message: "Invalid credentials", statusCode: 401 };
+    }
 
     return "Success";
   } catch (error) {
