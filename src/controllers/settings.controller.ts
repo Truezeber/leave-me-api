@@ -30,3 +30,31 @@ export const changeAvatar = async (
     })
   }
 }
+
+export const changeNickname = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/settings/change-nickname - Changing nickname");
+
+    const [userLid, nickname] = [
+      (req as any).user,
+      req.body.nickname
+    ];
+
+    await settingsService.changeNickname(userLid, nickname);
+
+    res
+      .status(200)
+      .json({
+        message: "Nickname changed successfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
