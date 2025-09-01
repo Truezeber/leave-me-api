@@ -9,7 +9,7 @@ const router = Router();
  * /api/v1/auth/request-signup:
  *   post:
  *     summary: Sends confirmation e-mail.
- *     tags: [Users]
+ *     tags: [Auth]
  *     produces:
  *       - application/json
  *     parameters:
@@ -41,7 +41,7 @@ router.post("/request-signup", verifyController.requestSignup);
  * /api/v1/auth/request-new-pin:
  *   post:
  *     summary: Sends new PIN e-mail.
- *     tags: [Users]
+ *     tags: [Auth]
  *     produces:
  *       - application/json
  *     parameters:
@@ -74,8 +74,8 @@ router.post("/request-new-pin", verifyController.requestNewPin);
  *
  * /api/v1/auth/request-verify:
  *   post:
- *     summary: Veryfi registration PIN.
- *     tags: [Users]
+ *     summary: Verify registration PIN.
+ *     tags: [Auth]
  *     produces:
  *       - application/json
  *     parameters:

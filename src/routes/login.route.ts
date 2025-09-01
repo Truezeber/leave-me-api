@@ -9,7 +9,7 @@ const router = Router();
  * /api/v1/login:
  *   post:
  *     summary: Logs existing user in.
- *     tags: [Users]
+ *     tags: [Auth]
  *     produces:
  *       - application/json
  *     parameters:

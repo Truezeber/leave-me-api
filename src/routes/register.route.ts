@@ -9,7 +9,7 @@ const router = Router();
  * /api/v1/register:
  *   post:
  *     summary: Registers new user.
- *     tags: [Users]
+ *     tags: [Auth]
  *     produces:
  *       - application/json
  *     parameters:

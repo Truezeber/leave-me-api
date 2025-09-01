@@ -10,7 +10,7 @@ const router = Router();
  * /api/v1/logout:
  *   post:
  *     summary: Logs out the user and clears JWT and refresh token cookies
- *     tags: [Users]
+ *     tags: [Auth]
  *     produces:
  *       - application/json
  *     responses:
