@@ -66,5 +66,39 @@ router.post("/change-avatar", handleAuth, settingsController.changeAvatar);
 
 router.post("/change-nickname", handleAuth, settingsController.changeNickname);
 
+/**
+ * @swagger
+ *
+ * /api/v1/settings/change-password:
+ *   post:
+ *     summary: Changes password.
+ *     tags: [Settings]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             password:
+ *               type: string
+ *             new_password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Password changed succesfully
+ *       400:
+ *         description: Invalid password
+ *       401:
+ *         description: Unauthorized or wrong credentials
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/change-password", handleAuth, settingsController.changePassword);
+
 
 export default router;
