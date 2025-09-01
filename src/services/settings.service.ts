@@ -2,6 +2,7 @@ import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
+import { auth } from "../utils/auth.utils";
 
 export const changeAvatar = async (
   leave_me_id: string,
@@ -58,7 +59,40 @@ export const changeNickname = async (
 
     return "Success";
   } catch (error) {
-    logger.error("Error inviting friend:", error);
+    logger.error("Error changing nickname:", error);
+    throw error;
+  }
+};
+
+
+export const changePassword = async (
+  leave_me_id: string,
+  password: string
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+    logger.info("Mongo collection", collection);
+
+    if (!validator.password(password)) {
+      logger.warn("Invalid password");
+      throw { message: "Invalid password", statusCode: 400 };
+    }
+
+    const newPassword = await auth.hashPassword(password)
+
+    await collection.updateOne(
+      { leave_me_id: leave_me_id },
+      { $set: { password: newPassword } }
+    );
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error changing password:", error);
     throw error;
   }
 };
