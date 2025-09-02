@@ -28,6 +28,10 @@ export const createPost = async (
         await postsCollection.updateOne({ _id: origin }, { $inc: { comments: 1 } });
       }
     } else {
+      if (leave_me_id === origin) {
+        throw { message: "You can't post on your own profile", statusCode: 403 };
+      }
+
       const friend: User = (await userCollection.findOne({ leave_me_id: origin })) as User;
 
       if (!friend) {
@@ -49,7 +53,7 @@ export const createPost = async (
       const areFriends = await relations.areFriends(leave_me_id, origin);
 
       if (!areFriends) {
-        throw { messsage: "You are not a friend of the user", statusCode: 403 };
+        throw { message: "You are not a friend of the user", statusCode: 403 };
       }
     }
 
