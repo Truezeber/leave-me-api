@@ -94,6 +94,13 @@ export const deletePost = async (
 
     await postsCollection.deleteOne({ _id: post_id });
 
+    if (ObjectId.isValid(post.origin)) {
+      await postsCollection.updateOne(
+        { _id: new ObjectId(post.origin) },
+        { $inc: { comments: -1 } }
+      );
+    }
+
     return "Success";
   } catch (error) {
     logger.error("Error deleting post:", error);
