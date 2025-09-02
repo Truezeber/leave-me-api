@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export interface Post {
-  _id: ObjectId;
+  _id?: ObjectId;
   author: string;
   createTime: Date;
   origin: ObjectId | string;
