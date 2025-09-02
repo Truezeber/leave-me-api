@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
+import { ObjectId } from "mongodb";
 
 import * as postsService from "../services/posts.service";
 
@@ -10,12 +11,15 @@ export const sendPost = async (
   try {
     logger.info("POST /api/v1/posts/send - Sending a post");
 
-    const [userLid, origin, content] = [
+    let [userLid, origin, content] = [
       (req as any).user,
       req.body.origin,
       req.body.content
     ];
 
+    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
+      origin = new ObjectId(origin);
+    }
     const response = await postsService.createPost(userLid, origin, content);
 
     res
