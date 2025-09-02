@@ -70,6 +70,37 @@ export const createPost = async (
   }
 };
 
+export const deletePost = async (
+  leave_me_id: string,
+  post_id: ObjectId
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const postsCollection = mainDb.collection<Post>("posts");
+
+    const post: Post = (await postsCollection.findOne({ _id: post_id })) as Post;
+
+    if (!post) {
+      throw { message: "Post not found", statusCode: 404 };
+    }
+
+    if (post.author !== leave_me_id) {
+      throw { message: "You can't delete someone else's post", statusCode: 403 };
+    }
+
+    await postsCollection.deleteOne({ _id: post_id });
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error deleting post:", error);
+    throw error;
+  }
+}
+
 export const likePost = async (
   leave_me_id: string,
   post_id: ObjectId
