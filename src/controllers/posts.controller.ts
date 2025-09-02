@@ -97,3 +97,35 @@ export const likePost = async (
     })
   }
 }
+
+export const unlikePost = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/posts/unlike - Unliking a post");
+
+    let [userLid, origin] = [
+      (req as any).user,
+      req.body.origin,
+    ];
+
+    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
+      origin = new ObjectId(origin);
+    } else {
+      throw { message: "Origin is not a valid ObjectId", statusCode: 400 }
+    }
+
+    const response = await postsService.unlikePost(userLid, origin);
+
+    res
+      .status(200)
+      .json(response);
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
