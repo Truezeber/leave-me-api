@@ -116,4 +116,37 @@ export const likePost = async (
   }
 };
 
+export const unlikePost = async (
+  leave_me_id: string,
+  post_id: ObjectId
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const postsCollection = mainDb.collection<Post>("posts");
+
+    const post: Post = (await postsCollection.findOne({ _id: post_id })) as Post;
+
+    if (!post) {
+      throw { message: "Post not found", statusCode: 404 };
+    }
+
+    if (!post.likes.includes(leave_me_id)) {
+      throw { message: "You are not liking this post", statusCode: 409 };
+    }
+
+    await postsCollection.updateOne(
+      { _id: post_id },
+      { $pull: { likes: leave_me_id } }
+    )
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error unlikeing the post:", error);
+    throw error;
+  }
+};
 
