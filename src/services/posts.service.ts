@@ -75,4 +75,50 @@ export const createPost = async (
   }
 };
 
+export const likePost = async (
+  leave_me_id: string,
+  post_id: ObjectId
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const postsCollection = mainDb.collection<Post>("posts");
+
+    const post: Post = (await postsCollection.findOne({ _id: post_id })) as Post;
+
+    if (!post) {
+      throw { message: "Post not found", statusCode: 404 };
+    }
+
+    const isBlocked = await relations.isBlocked(leave_me_id, post.author);
+
+    if (isBlocked) {
+      throw { message: "You are blocked by this user", statusCode: 403 };
+    }
+
+    const isBlocking = await relations.isBlocked(post.author, leave_me_id);
+
+    if (isBlocking) {
+      throw { message: "You are blocking this user", statusCode: 403 };
+    }
+
+    if (post.likes.includes(leave_me_id)) {
+      throw { message: "You are already liking this post", statusCode: 409 };
+    }
+
+    await postsCollection.updateOne(
+      { _id: post_id },
+      { $addToSet: { likes: leave_me_id } }
+    )
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error likeing the post:", error);
+    throw error;
+  }
+};
+
 
