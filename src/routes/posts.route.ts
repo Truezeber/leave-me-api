@@ -37,3 +37,6 @@ const router = Router();
  */
 
 router.post("/create", handleAuth, postsController.sendPost);
+
+
+export default router;
