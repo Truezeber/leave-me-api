@@ -6,7 +6,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/v1/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Registers new user.
  *     tags: [Auth]
@@ -45,6 +45,6 @@ const router = Router();
  *         description: Database error
  */
 
-router.post("/", registerController.postUser);
+router.post("/register", registerController.postUser);
 
 export default router;

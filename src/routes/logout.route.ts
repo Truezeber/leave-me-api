@@ -7,7 +7,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/v1/logout:
+ * /api/v1/auth/logout:
  *   post:
  *     summary: Logs out the user and clears JWT and refresh token cookies
  *     tags: [Auth]
@@ -28,6 +28,6 @@ const router = Router();
  *         description: Internal server error
  */
 
-router.post("/", handleAuth, logoutController.logoutUser);
+router.post("/logout", handleAuth, logoutController.logoutUser);
 
 export default router;

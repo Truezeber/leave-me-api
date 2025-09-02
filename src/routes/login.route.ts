@@ -6,7 +6,7 @@ const router = Router();
 /**
  * @swagger
  *
- * /api/v1/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Logs existing user in.
  *     tags: [Auth]
@@ -35,6 +35,6 @@ const router = Router();
  *         description: Database error
  */
 
-router.post("/", loginController.loginUser);
+router.post("/login", loginController.loginUser);
 
 export default router;

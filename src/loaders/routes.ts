@@ -8,9 +8,9 @@ import verifyRouter from "../routes/verify.route";
 import settingsRouter from "../routes/settings.route"
 
 export const setupRoutes = (app: Application): void => {
-  app.use("/api/v1/register", registerRouter);
-  app.use("/api/v1/login", loginRouter);
-  app.use("/api/v1/logout", logoutRouter);
+  app.use("/api/v1/auth", registerRouter);
+  app.use("/api/v1/auth", loginRouter);
+  app.use("/api/v1/auth", logoutRouter);
   app.use("/api/v1/friends", friendsRouter);
   app.use("/api/v1/block", blockRouter);
   app.use("/api/v1/auth", verifyRouter);
