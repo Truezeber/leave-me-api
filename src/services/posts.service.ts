@@ -24,9 +24,16 @@ export const createPost = async (
 
       if (!originPost) {
         throw { message: "Origin not found", statusCode: 404 };
-      } else {
-        await postsCollection.updateOne({ _id: origin }, { $inc: { comments: 1 } });
       }
+
+      const isBlocked = await relations.isBlocked(leave_me_id, originPost.author);
+      const isBlocking = await relations.isBlocked(originPost.author, leave_me_id);
+
+      if (isBlocked || isBlocking) {
+        throw { message: "You are blocked or blocking the user", statusCode: 403 };
+      }
+
+      await postsCollection.updateOne({ _id: origin }, { $inc: { comments: 1 } });
     } else {
       if (leave_me_id === origin) {
         throw { message: "You can't post on your own profile", statusCode: 403 };
@@ -36,18 +43,6 @@ export const createPost = async (
 
       if (!friend) {
         throw { message: "Origin not found", statusCode: 404 };
-      }
-
-      const userBlocked = await relations.isBlocked(origin, leave_me_id);
-
-      if (userBlocked) {
-        throw { message: "User blocked you", statusCode: 403 };
-      }
-
-      const originBlocked = await relations.isBlocked(leave_me_id, origin);
-
-      if (originBlocked) {
-        throw { message: "You blocked the user", statusCode: 403 };
       }
 
       const areFriends = await relations.areFriends(leave_me_id, origin);
