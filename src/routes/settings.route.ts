@@ -69,6 +69,39 @@ router.post("/change-nickname", handleAuth, settingsController.changeNickname);
 /**
  * @swagger
  *
+ * /api/v1/settings/change-status:
+ *   post:
+ *     summary: Changes status.
+ *     tags: [Settings]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             status:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Status changed succesfully
+ *       400:
+ *         description: Status too long
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/change-status", handleAuth, settingsController.changeStatus);
+
+
+/**
+ * @swagger
+ *
  * /api/v1/settings/change-password:
  *   post:
  *     summary: Changes password.
