@@ -137,3 +137,31 @@ export const changeBackground = async (
     throw error;
   }
 }
+
+export const changeStatus = async (
+  leave_me_id: string,
+  status: string
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+
+    if (status.length > 120) {
+      throw { message: "Status is too long", statusCode: 400 };
+    }
+
+    await collection.updateOne(
+      { leave_me_id: leave_me_id },
+      { $set: { status: status } }
+    );
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error changing status:", error);
+    throw error;
+  }
+}
