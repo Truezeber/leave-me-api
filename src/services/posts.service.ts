@@ -192,7 +192,7 @@ export const loadPosts = async (
   leave_me_id: string,
   origin: ObjectId | string,
   amount: number,
-  sortBy: "date" | "likes"
+  sort_by: "date" | "likes"
 ): Promise<Post[]> => {
   try {
     if (!client) {
@@ -212,7 +212,7 @@ export const loadPosts = async (
 
     const postsCollection = mainDb.collection<Post>("posts");
 
-    const sort: Sort = sortBy === "likes" ? { likes: -1 } : { createTime: -1 };
+    const sort: Sort = sort_by === "likes" ? { likes: -1 } : { createTime: -1 };
     const posts = await postsCollection
       .find({ origin })
       .sort(sort)
