@@ -140,7 +140,7 @@ table, td { color: #7e8f9e; } #u_body a { color: #000000; text-decoration: under
       <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:helvetica,sans-serif;" align="left">
         
   <div style="font-size: 43px; line-height: 190%; text-align: left; word-wrap: break-word;">
-    <p style="line-height: 190%;"><a rel="noopener" href="https://leavemeanote.site/" target="_blank"><span style="color: rgb(255, 232, 219); line-height: 81.7px;">LeaveMeaNote.site</span></a></p>
+    <p style="line-height: 190%;"><a rel="noopener" href="https://leavemeanote.site/" target="_blank"><span style="color: rgb(255, 232, 219); line-height: 81.7px;"><span style="line-height: 81.7px;">LeaveMeaNote</span>.site</span></a></p>
   </div>
 
       </td>
@@ -161,14 +161,14 @@ table, td { color: #7e8f9e; } #u_body a { color: #000000; text-decoration: under
 
   
   
-<div class="u-row-container" style="padding: 0px;background-color: #ffe8db">
+<div class="u-row-container" style="padding: 0px;background-color: transparent">
   <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: #ffe8db;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
       
-<!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<!--[if (mso)|(IE)]><td align="center" width="600" style="background-color: #ffe8db;width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-  <div style="height: 100%;width: 100% !important;">
+  <div style="background-color: #ffe8db;height: 100%;width: 100% !important;">
   <!--[if (!mso)&(!IE)]><!--><div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
 <table style="font-family:helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -214,7 +214,7 @@ table, td { color: #7e8f9e; } #u_body a { color: #000000; text-decoration: under
         
   <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
 <div align="center">
-  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:80px;" arcsize="11%"  stroke="f" fillcolor="#739ec9"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
+  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:76px;" arcsize="11%"  stroke="f" fillcolor="#739ec9"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
     <a href="" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #739ec9; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
       <span style="display:block;padding:10px 20px;line-height:120%;"><span style="line-height: 16.8px;">${pin}</span></span>
     </a>
@@ -427,6 +427,6 @@ table, td { color: #7e8f9e; } #u_body a { color: #000000; text-decoration: under
   <!--[if IE]></div><![endif]-->
 </body>
 
-</html>`;
+</html>`
   return mailTemplate;
 }
