@@ -3,7 +3,7 @@ import { User } from "../models/user.model";
 import { Post } from "../models/posts.models";
 import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
-import { ObjectId } from "mongodb";
+import { ObjectId, Sort } from "mongodb";
 
 export const createPost = async (
   leave_me_id: string,
@@ -188,3 +188,40 @@ export const unlikePost = async (
   }
 };
 
+export const loadPosts = async (
+  leave_me_id: string,
+  origin: ObjectId | string,
+  amount: number,
+  sortBy: "date" | "likes"
+): Promise<Post[]> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    if (!(origin instanceof ObjectId)) {
+      if (origin !== leave_me_id) {
+        const areFriends = await relations.areFriends(leave_me_id, origin);
+
+        if (!areFriends) {
+          throw { message: "Origin user not found or is not your friend", statusCode: 403 };
+        }
+      }
+    }
+
+    const postsCollection = mainDb.collection<Post>("posts");
+
+    const sort: Sort = sortBy === "likes" ? { likes: -1 } : { createTime: -1 };
+    const posts = await postsCollection
+      .find({ origin })
+      .sort(sort)
+      .limit(amount)
+      .toArray();
+
+    return posts;
+  } catch (error) {
+    logger.error("Error fetching posts:", error);
+    throw error;
+  }
+}
