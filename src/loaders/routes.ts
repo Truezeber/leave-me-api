@@ -7,6 +7,7 @@ import blockRouter from "../routes/block.route";
 import verifyRouter from "../routes/verify.route";
 import settingsRouter from "../routes/settings.route";
 import postsRouter from "../routes/posts.route";
+import usersRouter from "../routes/users.route";
 
 export const setupRoutes = (app: Application): void => {
   app.use("/api/v1/auth", registerRouter);
@@ -17,4 +18,5 @@ export const setupRoutes = (app: Application): void => {
   app.use("/api/v1/auth", verifyRouter);
   app.use("/api/v1/settings", settingsRouter);
   app.use("/api/v1/posts", postsRouter);
+  app.use("/api/v1/users", usersRouter);
 };
