@@ -23,7 +23,7 @@ export interface User {
   refresh_tokens: string[];
 }
 
-export interface returnUser {
+export interface ReturnUser {
   email: string;
   nickname: string;
   leave_me_id: string;
@@ -35,7 +35,7 @@ export interface returnUser {
   is_banned: boolean;
 }
 
-export interface returnShortUser {
+export interface ReturnShortUser {
   nickname: string;
   leave_me_id: string;
   status: string;
