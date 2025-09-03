@@ -23,6 +23,29 @@ export interface User {
   refresh_tokens: string[];
 }
 
+export interface returnUser {
+  email: string;
+  nickname: string;
+  leave_me_id: string;
+  status: string;
+  avatar_url: string;
+  background_url: string;
+  badges: string[];
+  points: number;
+  is_banned: boolean;
+}
+
+export interface returnShortUser {
+  nickname: string;
+  leave_me_id: string;
+  status: string;
+  avatar_url: string;
+  background_url: string;
+  badges: string[];
+  points: number;
+  is_banned: boolean;
+}
+
 export interface UserRegister {
   email: string;
   password: string;
