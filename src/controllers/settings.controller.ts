@@ -87,6 +87,35 @@ export const changeNickname = async (
   }
 }
 
+export const changeStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/settings/change-status - Changing status");
+
+    const [userLid, status] = [
+      (req as any).user,
+      req.body.status
+    ];
+
+    await settingsService.changeStatus(userLid, status);
+
+    res
+      .status(200)
+      .json({
+        message: "Status changed successfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
+
+
 export const changePassword = async (
   req: Request,
   res: Response
