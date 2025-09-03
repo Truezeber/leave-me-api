@@ -137,20 +137,27 @@ export const loadPosts = async (
   try {
     logger.info("GET /api/v1/posts/load - Loading posts");
 
-    let [userLid, origin, amount, sortBy] = [
+    let [userLid, originRaw, amountRaw, sortByRaw] = [
       (req as any).user,
-      req.body.origin,
-      req.body.amount,
-      req.body.sort_by
+      req.query.origin as string,
+      req.query.amount as string,
+      req.query.sort_by as string
     ];
 
-    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
-      origin = new ObjectId(origin);
+    // ObjectId check
+    let origin: ObjectId | string = originRaw;
+    if (/^[a-f0-9]{24}$/i.test(originRaw)) {
+      origin = new ObjectId(originRaw);
     }
 
+    // amount
+    const amount = Number(amountRaw);
     if (isNaN(amount) || amount <= 0) {
       throw { message: "Invalid amount", statusCode: 400 };
     }
+
+    // sortBy
+    const sortBy = sortByRaw === "likes" ? "likes" : "date";
 
     const response = await postsService.loadPosts(userLid, origin, amount, sortBy);
 
