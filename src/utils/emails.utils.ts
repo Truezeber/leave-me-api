@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { config } from "../config/app.config";
+import { confirmPinEmail } from "./emails/confirmPin.email";
 
 const resend = new Resend(config.resendKey);
 
@@ -9,7 +10,7 @@ export const email = {
       from: 'donotreply@leavemeanote.site',
       to: [receiver],
       subject: "Leave Me a Note: Confirm your e-mail",
-      html: `Hey! Here's your confirmation code: ${pin}`,
+      html: confirmPinEmail(receiver, pin),
     });
 
     return { data, error };
