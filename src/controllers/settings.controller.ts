@@ -31,6 +31,34 @@ export const changeAvatar = async (
   }
 }
 
+export const changeBackground = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/settings/change-background - Changing background");
+
+    const [userLid, backgroundUrl] = [
+      (req as any).user,
+      req.body.background_url
+    ];
+
+    await settingsService.changeBackground(userLid, backgroundUrl);
+
+    res
+      .status(200)
+      .json({
+        message: "Background changed successfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
+
 export const changeNickname = async (
   req: Request,
   res: Response
