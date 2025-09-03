@@ -109,3 +109,31 @@ export const changePassword = async (
     throw error;
   }
 };
+
+export const changeBackground = async (
+  leave_me_id: string,
+  url: string
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const collection = mainDb.collection<User>("users");
+
+    if (!validator.url(url)) {
+      throw { message: "Invalid URL", statusCode: 400 };
+    }
+
+    await collection.updateOne(
+      { leave_me_id: leave_me_id },
+      { $set: { background_url: url } }
+    );
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error changing background:", error);
+    throw error;
+  }
+}
