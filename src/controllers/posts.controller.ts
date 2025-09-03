@@ -129,3 +129,36 @@ export const unlikePost = async (
     })
   }
 }
+
+export const loadPosts = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("GET /api/v1/posts/load - Loading posts");
+
+    let [userLid, origin, amount, sortBy] = [
+      (req as any).user,
+      req.body.origin,
+      req.body.amount,
+      req.body.sort_by
+    ];
+
+    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
+      origin = new ObjectId(origin);
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      throw { message: "Invalid amount", statusCode: 400 };
+    }
+
+    const response = await postsService.loadPosts(userLid, origin, amount, sortBy);
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
