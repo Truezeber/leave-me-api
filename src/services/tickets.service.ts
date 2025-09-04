@@ -115,3 +115,36 @@ export const message = async (
     throw error;
   }
 };
+
+export const loadticket = async (
+  leave_me_id: string,
+  ticket_id: string
+): Promise<Ticket> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const ticketsCollection = mainDb.collection<Ticket>("tickets");
+    const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
+
+    if (!ticket) {
+      throw { message: "Ticket not found", statusCode: 404 };
+    }
+
+    const usersCollection = mainDb.collection<User>("users");
+    const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
+
+    const isParticipant = ticket.participants.includes(leave_me_id);
+
+    if (!user.is_admin && !isParticipant) {
+      throw { message: "You're not a part of this conversation", statusCode: 403 };
+    }
+
+    return ticket;
+  } catch (error) {
+    logger.error("Error fetching posts:", error);
+    throw error;
+  }
+}
