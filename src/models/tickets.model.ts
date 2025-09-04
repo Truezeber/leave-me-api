@@ -1,5 +1,7 @@
 import { ObjectId } from "mongodb";
 
+export type TicketCategory = "Report post" | "Report user" | "Delete account" | "Unban request" | "Data request" | "Other";
+
 export interface TicketMessage {
   _id?: ObjectId;
   author: string;
@@ -13,7 +15,7 @@ export interface Ticket {
   ticketId: string;
   author: string;
   createTime: Date;
-  category: "Report post" | "Report user" | "Delete account" | "Unban request" | "Data request" | "Other";
+  category: TicketCategory;
   participants: string;
   reportedUser?: string;
   reportedPost?: string;
