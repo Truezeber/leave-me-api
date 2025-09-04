@@ -30,7 +30,7 @@ export const createTicket = async (
       }
     }
 
-    if (reported_user) {
+    if (reported_post) {
       const post = await postsCollection.findOne({ _id: reported_post });
 
       if (!post) {
@@ -144,9 +144,48 @@ export const loadTicket = async (
 
     return ticket;
   } catch (error) {
-    logger.error("Error fetching posts:", error);
+    logger.error("Error fetching ticket:", error);
     throw error;
   }
 }
 
+export const loadTickets = async (
+  leave_me_id: string,
+  amount: number,
+  sort_by: "newest" | "oldest"
+): Promise<Ticket[]> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const ticketsCollection = mainDb.collection<Ticket>("tickets");
+    const usersCollection = mainDb.collection<User>("users");
+
+    const user = await usersCollection.findOne({ leave_me_id }) as User;
+
+    const sortDirection = sort_by === "newest" ? -1 : 1;
+
+    const tickets = await ticketsCollection.aggregate([
+      {
+        $match: user.is_admin
+          ? {}
+          : { participants: leave_me_id }
+      },
+      {
+        $addFields: {
+          lastMessageDate: { $max: "$messages.createTime" }
+        }
+      },
+      { $sort: { lastMessageDate: sortDirection } },
+      { $limit: amount }
+    ]).toArray() as unknown as Ticket[];
+
+    return tickets;
+  } catch (error) {
+    logger.error("Error fetching tickets:", error);
+    throw error;
+  }
+}
 

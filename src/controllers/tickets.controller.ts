@@ -88,3 +88,35 @@ export const loadTicket = async (
     res.status(status).json({ error: error.message || "Something went wrong" })
   }
 }
+
+export const loadTickets = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("GET /api/v1/tickets/load-tickets - Loading tickets");
+
+    let [userLid, amount, sortBy] = [
+      (req as any).user,
+      req.query.amount,
+      req.query.sort_by as string
+    ];
+
+    const newAmount = Number(amount);
+
+    if (sortBy !== "newest" && sortBy !== "oldest") {
+      throw { message: "Invalid sorting", statusCode: 400 };
+    }
+
+    if (newAmount <= 0) {
+      throw { message: "Amount must be positive", statusCode: 400 };
+    }
+
+    const response = await ticketsService.loadTickets(userLid, newAmount, sortBy);
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({ error: error.message || "Something went wrong" })
+  }
+}

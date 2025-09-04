@@ -106,4 +106,39 @@ router.post("/message", handleAuth, ticketsController.message);
  */
 
 router.get("/load-ticket", handleAuth, ticketsController.loadTicket);
+
+/**
+ * @swagger
+ *
+ * /api/v1/tickets/load-tickets:
+ *   get:
+ *     summary: Loads tickets list.
+ *     tags: [Tickets]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: amount
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: Amount of tickets to load
+ *       - in: query
+ *         name: sort_by
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: newest or oldest
+ *     responses:
+ *       200:
+ *         description: Tickets loaded successfully
+ *       400:
+ *         description: Invalid request parameters
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.get("/load-tickets", handleAuth, ticketsController.loadTickets);
 export default router;
