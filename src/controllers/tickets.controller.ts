@@ -67,3 +67,24 @@ export const message = async (
     res.status(status).json({ error: error.message || "Something went wrong" })
   }
 }
+
+export const loadTicket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("GET /api/v1/tickets/load-ticket - Loading a ticket");
+
+    let [userLid, ticketId] = [
+      (req as any).user,
+      req.query.ticket_id as string
+    ];
+
+    const response = await ticketsService.loadticket(userLid, ticketId);
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({ error: error.message || "Something went wrong" })
+  }
+}
