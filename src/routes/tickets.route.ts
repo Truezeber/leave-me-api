@@ -77,6 +77,37 @@ router.post("/message", handleAuth, ticketsController.message);
 /**
  * @swagger
  *
+ * /api/v1/tickets/close:
+ *   post:
+ *     summary: Close a ticket.
+ *     tags: [Tickets]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             ticket_id:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Invite sent successfully
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Ticket not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/close", handleAuth, ticketsController.closeTicket);
+/**
+ * @swagger
+ *
  * /api/v1/tickets/load-ticket:
  *   get:
  *     summary: Loads ticket content.
