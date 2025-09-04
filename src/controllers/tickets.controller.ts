@@ -22,11 +22,12 @@ export const createTicket = async (
       throw { message: "Invalid category", statusCode: 400 };
     }
 
-
-    if (reportedPost && typeof reportedPost === "string" && reportedPost.length === 24 && /^[a-f0-9]+$/i.test(reportedPost)) {
-      reportedPost = new ObjectId(reportedPost);
-    } else {
-      throw { message: "Reported post is not a valid ObjectId", statusCode: 400 };
+    if (reportedPost !== "") {
+      if (typeof reportedPost === "string" && reportedPost.length === 24 && /^[a-f0-9]+$/i.test(reportedPost)) {
+        reportedPost = new ObjectId(reportedPost);
+      } else {
+        throw { message: "Reported post is not a valid ObjectId", statusCode: 400 };
+      }
     }
 
 

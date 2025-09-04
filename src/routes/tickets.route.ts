@@ -38,4 +38,4 @@ const router = Router();
 
 router.post("/create", handleAuth, ticketsController.createTicket);
 
-
+export default router;
