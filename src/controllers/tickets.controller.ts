@@ -45,4 +45,25 @@ export const createTicket = async (
   }
 }
 
+export const message = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/tickets/message - Messaging in ticket");
 
+    let [userLid, ticketId, content, isComment] = [
+      (req as any).user,
+      req.body.ticket_id,
+      req.body.content,
+      req.body.isComment
+    ];
+
+    const response = await ticketsService.message(userLid, ticketId, content, isComment);
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({ error: error.message || "Something went wrong" })
+  }
+}
