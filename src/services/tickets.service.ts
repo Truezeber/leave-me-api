@@ -1,7 +1,7 @@
 import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { Post } from "../models/posts.models";
-import { Ticket, TicketCategory } from "../models/tickets.model";
+import { Ticket, TicketCategory, TicketMessage } from "../models/tickets.model";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
 import { randomInt } from "crypto";
@@ -55,6 +55,41 @@ export const createTicket = async (
     await ticketsCollection.insertOne(newTicket);
 
     return newTicket;
+  } catch (error) {
+    logger.error("Error creating ticket:", error);
+    throw error;
+  }
+};
+
+export const message = async (
+  leave_me_id: string,
+  ticket_id: string,
+  content: string,
+  is_comment: boolean
+): Promise<TicketMessage> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const ticketsCollection = mainDb.collection<Ticket>("tickets");
+    const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
+
+    if (!ticket) {
+      throw { message: "Ticket not found", statusCode: 404 };
+    }
+
+    const newMessage: TicketMessage = {
+      author: leave_me_id,
+      createTime: new Date(),
+      content: content,
+      isComment: is_comment
+    }
+
+    await ticketsCollection.updateOne({ ticketId: ticket_id }, { $push: { messages: newMessage } });
+
+    return newMessage;
   } catch (error) {
     logger.error("Error creating ticket:", error);
     throw error;
