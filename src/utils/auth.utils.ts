@@ -16,10 +16,13 @@ export const auth = {
       expiresIn: "1h",
     });
   },
-  verifyJwt(token: string): JwtPayload | null {
+  verifyJwt(token: string): JwtPayload | "expired" | null {
     try {
       return jwt.verify(token, config.jwtSecret as string) as JwtPayload;
-    } catch {
+    } catch (err: any) {
+      if (err.name === "TokenExpiredError") {
+        return "expired";
+      }
       return null;
     }
   },
