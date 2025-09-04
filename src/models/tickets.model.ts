@@ -16,9 +16,9 @@ export interface Ticket {
   author: string;
   createTime: Date;
   category: TicketCategory;
-  participants: string;
+  participants: string[];
   reportedUser?: string;
-  reportedPost?: string;
+  reportedPost?: ObjectId[];
   closed: boolean;
-  messages: TicketMessage[];
+  messages?: TicketMessage[];
 }
