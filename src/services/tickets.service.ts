@@ -77,15 +77,17 @@ export const message = async (
     const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
     let checkedComment = false;
 
-    if (user.is_admin) {
-      checkedComment = is_comment;
-    }
-
     const ticketsCollection = mainDb.collection<Ticket>("tickets");
     const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
 
     if (!ticket) {
       throw { message: "Ticket not found", statusCode: 404 };
+    }
+
+    if (user.is_admin) {
+      checkedComment = is_comment;
+    } else if (ticket.closed) {
+      throw { message: "Ticket is closed", statusCode: 403 };
     }
 
     const isParticipant = ticket.participants.includes(leave_me_id);
