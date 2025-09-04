@@ -73,4 +73,37 @@ router.post("/create", handleAuth, ticketsController.createTicket);
  */
 
 router.post("/message", handleAuth, ticketsController.message);
+
+/**
+ * @swagger
+ *
+ * /api/v1/tickets/load-ticket:
+ *   get:
+ *     summary: Loads ticket content.
+ *     tags: [Tickets]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: ticket_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the ticket
+ *     responses:
+ *       200:
+ *         description: Ticket loaded successfully
+ *       400:
+ *         description: Invalid request parameters
+ *       403:
+ *         description: You can access only your tickets
+ *       404:
+ *         description: Ticket not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.get("/load-ticket", handleAuth, ticketsController.loadTicket);
 export default router;
