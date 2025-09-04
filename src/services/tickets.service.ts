@@ -61,6 +61,40 @@ export const createTicket = async (
   }
 };
 
+export const closeTicket = async (
+  leave_me_id: string,
+  ticket_id: string
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const usersCollection = mainDb.collection<User>("users");
+    const ticketsCollection = mainDb.collection<Ticket>("tickets");
+
+    const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
+
+    if (!user.is_admin) {
+      throw { message: "Only admins can close tickets", statusCode: 403 };
+    }
+
+    const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
+
+    if (!ticket) {
+      throw { message: "Ticket not found", statusCode: 404 };
+    }
+
+    await ticketsCollection.updateOne({ ticketId: ticket_id }, { $set: { closed: true } });
+
+    return "Success";
+  } catch (error) {
+    logger.error("Error closing a ticket:", error);
+    throw error;
+  }
+}
+
 export const message = async (
   leave_me_id: string,
   ticket_id: string,
