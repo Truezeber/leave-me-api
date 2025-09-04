@@ -73,6 +73,14 @@ export const message = async (
       throw { message: "Database client is not available", statusCode: 503 };
     }
 
+    const usersCollection = mainDb.collection<User>("users");
+    const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
+    let checkedComment = false;
+
+    if (user.is_admin) {
+      checkedComment = is_comment;
+    }
+
     const ticketsCollection = mainDb.collection<Ticket>("tickets");
     const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
 
@@ -84,7 +92,7 @@ export const message = async (
       author: leave_me_id,
       createTime: new Date(),
       content: content,
-      isComment: is_comment
+      isComment: checkedComment
     }
 
     await ticketsCollection.updateOne({ ticketId: ticket_id }, { $push: { messages: newMessage } });
