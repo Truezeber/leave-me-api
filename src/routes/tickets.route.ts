@@ -38,4 +38,39 @@ const router = Router();
 
 router.post("/create", handleAuth, ticketsController.createTicket);
 
+/**
+ * @swagger
+ *
+ * /api/v1/tickets/message:
+ *   post:
+ *     summary: Messages in a ticket.
+ *     tags: [Tickets]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             ticket_id:
+ *               type: string
+ *             content:
+ *               type: string
+ *             is_comment:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Invite sent successfully
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Ticket not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/message", handleAuth, ticketsController.message);
 export default router;

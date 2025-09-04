@@ -88,6 +88,16 @@ export const message = async (
       throw { message: "Ticket not found", statusCode: 404 };
     }
 
+    const isParticipant = ticket.participants.includes(leave_me_id);
+
+    if (!isParticipant) {
+      if (user.is_admin) {
+        await ticketsCollection.updateOne({ ticketId: ticket_id }, { $push: { participants: leave_me_id } });
+      } else {
+        throw { message: "You're not a part of this conversation", statusCode: 403 };
+      }
+    }
+
     const newMessage: TicketMessage = {
       author: leave_me_id,
       createTime: new Date(),
