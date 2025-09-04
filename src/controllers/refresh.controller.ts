@@ -20,13 +20,12 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
       .status(200)
       .cookie("access_token", result, {
         httpOnly: true,
-        //secure: true, //! <- uncomment before deploy
-        sameSite: true,
+        sameSite: 'lax',
         maxAge: 1000 * 60 * 60,
+        // secure: true, //! uncomment for prod
       })
-      .json({
-        success: true
-      });
+      .json({ success: true });
+
   } catch (error: any) {
     logger.error("Error refreshing token:", error);
     res.status(error.statusCode || 401).json({

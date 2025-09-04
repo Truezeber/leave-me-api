@@ -16,12 +16,13 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
         //secure: true, //! <- uncomment before deploy
-        sameSite: true,
+        sameSite: 'lax',
+        maxAge: 10 * 365 * 24 * 60 * 60 * 1000, //! <- security vulnerability, add refresh_token rotation in the future -_-
       })
       .cookie("access_token", accessToken, {
         httpOnly: true,
         //secure: true, //! <- uncomment before deploy
-        sameSite: true,
+        sameSite: 'lax',
         maxAge: 1000 * 60 * 60,
       })
       .json({ success: true });
