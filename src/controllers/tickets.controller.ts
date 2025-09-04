@@ -56,7 +56,7 @@ export const message = async (
       (req as any).user,
       req.body.ticket_id,
       req.body.content,
-      req.body.isComment
+      req.body.is_comment
     ];
 
     const response = await ticketsService.message(userLid, ticketId, content, isComment);
