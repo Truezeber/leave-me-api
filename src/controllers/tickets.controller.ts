@@ -68,6 +68,27 @@ export const message = async (
   }
 }
 
+export const closeTicket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/tickets/close - Closing a ticket");
+
+    let [userLid, ticketId] = [
+      (req as any).user,
+      req.body.ticket_id
+    ];
+
+    const response = await ticketsService.closeTicket(userLid, ticketId);
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({ error: error.message || "Something went wrong" })
+  }
+}
+
 export const loadTicket = async (
   req: Request,
   res: Response
