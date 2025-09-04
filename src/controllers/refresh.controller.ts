@@ -23,6 +23,9 @@ export const refreshToken = async (req: Request, res: Response): Promise<void> =
         //secure: true, //! <- uncomment before deploy
         sameSite: true,
         maxAge: 1000 * 60 * 60,
+      })
+      .json({
+        success: true
       });
   } catch (error: any) {
     logger.error("Error refreshing token:", error);
