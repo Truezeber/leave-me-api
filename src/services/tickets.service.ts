@@ -116,7 +116,7 @@ export const message = async (
   }
 };
 
-export const loadticket = async (
+export const loadTicket = async (
   leave_me_id: string,
   ticket_id: string
 ): Promise<Ticket> => {
@@ -148,3 +148,5 @@ export const loadticket = async (
     throw error;
   }
 }
+
+

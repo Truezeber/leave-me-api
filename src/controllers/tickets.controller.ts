@@ -80,7 +80,7 @@ export const loadTicket = async (
       req.query.ticket_id as string
     ];
 
-    const response = await ticketsService.loadticket(userLid, ticketId);
+    const response = await ticketsService.loadTicket(userLid, ticketId);
 
     res.status(200).json(response);
   } catch (error: any) {
