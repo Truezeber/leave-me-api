@@ -142,3 +142,35 @@ export const grantBadge = async (
   }
 }
 
+export const revokeBadge = async (
+  leave_me_id: string,
+  target_id: string,
+  badge: string
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not availabel", statusCode: 503 };
+    }
+
+    const usersColection = mainDb.collection<User>("users");
+
+    const adminUser = await usersColection.findOne({ leave_me_id: leave_me_id }) as User;
+
+    if (!adminUser.is_admin) {
+      throw { message: "You can't do that", statusCode: 403 };
+    }
+
+    const userHaveBadge = await usersColection.findOne({ leave_me_id: target_id, badges: badge });
+
+    if (!userHaveBadge) {
+      throw { message: "User doesn't have this badge", statusCode: 409 };
+    }
+
+    await usersColection.updateOne({ leave_me_id: leave_me_id }, { $pull: { badges: badge } });
+    return "Success";
+  } catch (error) {
+    logger.error("Error revoking a badge:", error);
+    throw error;
+  }
+}
