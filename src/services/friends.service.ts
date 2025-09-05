@@ -2,6 +2,7 @@ import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
+import { Notifier, Notification } from "../models/notifications.model";
 
 export const inviteFriend = async (
   leave_me_id: string,
@@ -14,6 +15,8 @@ export const inviteFriend = async (
     }
 
     const collection = mainDb.collection<User>("users");
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+
     logger.info("Mongo collection", collection);
 
     const user: User = (await collection.findOne({
@@ -65,6 +68,17 @@ export const inviteFriend = async (
       { $addToSet: { invites_get: leave_me_id } }
     );
 
+    const newNotification: Notification = {
+      type: "invite",
+      notification_user: leave_me_id,
+      clickable_content: leave_me_id,
+      content: "Check his profile!",
+      createdAt: new Date(),
+      isSeen: false
+    }
+
+    await notificationsCollection.updateOne({ leave_me_id: friend_lid }, { $push: { notifications: newNotification } });
+
     return "Success";
   } catch (error) {
     logger.error("Error inviting friend:", error);
@@ -83,6 +97,8 @@ export const acceptFriend = async (
     }
 
     const collection = mainDb.collection<User>("users");
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+
     logger.info("Mongo collection", collection);
 
     const user: User = (await collection.findOne({
@@ -110,6 +126,17 @@ export const acceptFriend = async (
         $addToSet: { friends: leave_me_id }
       }
     );
+
+    const newNotification: Notification = {
+      type: "invite",
+      notification_user: leave_me_id,
+      clickable_content: leave_me_id,
+      content: "Accepted your invite!",
+      createdAt: new Date(),
+      isSeen: false
+    }
+
+    await notificationsCollection.updateOne({ leave_me_id: friend_lid }, { $push: { notifications: newNotification } });
 
     return "Success";
   } catch (error) {
