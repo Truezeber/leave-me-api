@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as ticketsController from "../controllers/tickets.controller";
-import { handleAuth } from "../middlewares/auth.middleware";
+import { handleAuthNoBan } from "../middlewares/auth.middleware";
 const router = Router();
 /**
  * @swagger
@@ -38,7 +38,7 @@ const router = Router();
  *         description: Database error
  */
 
-router.post("/create", handleAuth, ticketsController.createTicket);
+router.post("/create", handleAuthNoBan, ticketsController.createTicket);
 
 /**
  * @swagger
@@ -74,7 +74,7 @@ router.post("/create", handleAuth, ticketsController.createTicket);
  *         description: Database error
  */
 
-router.post("/message", handleAuth, ticketsController.message);
+router.post("/message", handleAuthNoBan, ticketsController.message);
 
 /**
  * @swagger
@@ -106,7 +106,7 @@ router.post("/message", handleAuth, ticketsController.message);
  *         description: Database error
  */
 
-router.post("/close", handleAuth, ticketsController.closeTicket);
+router.post("/close", handleAuthNoBan, ticketsController.closeTicket);
 /**
  * @swagger
  *
@@ -138,7 +138,7 @@ router.post("/close", handleAuth, ticketsController.closeTicket);
  *         description: Database error
  */
 
-router.get("/load-ticket", handleAuth, ticketsController.loadTicket);
+router.get("/load-ticket", handleAuthNoBan, ticketsController.loadTicket);
 
 /**
  * @swagger
@@ -175,5 +175,5 @@ router.get("/load-ticket", handleAuth, ticketsController.loadTicket);
  *         description: Database error
  */
 
-router.get("/load-tickets", handleAuth, ticketsController.loadTickets);
+router.get("/load-tickets", handleAuthNoBan, ticketsController.loadTickets);
 export default router;

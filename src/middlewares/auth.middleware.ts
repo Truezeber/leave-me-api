@@ -66,7 +66,7 @@ export const handleAuth: RequestHandler = async (
   }
 };
 
-export const handleAuthNoAdmin = (req: Request, res: Response, next: NextFunction) => {
+export const handleAuthNoBan = (req: Request, res: Response, next: NextFunction) => {
   if (req.cookies.access_token) {
     const accessToken = req.cookies.access_token;
     const payload = auth.verifyJwt(accessToken);

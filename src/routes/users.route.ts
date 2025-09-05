@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as usersController from "../controllers/users.controller";
-import { handleAuth } from "../middlewares/auth.middleware";
+import { handleAuthNoBan } from "../middlewares/auth.middleware";
 const router = Router();
 
 /**
@@ -34,6 +34,6 @@ const router = Router();
  *         description: Database error
  */
 
-router.get("/get-user", handleAuth, usersController.getUser);
+router.get("/get-user", handleAuthNoBan, usersController.getUser);
 
 export default router;
