@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
+import { ObjectId } from "mongodb";
 
 import * as adminService from "../services/admin.service";
 
@@ -59,4 +60,36 @@ export const unbanUser = async (
   }
 }
 
+export const deletePost = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/v1/admin/delete-post - Deleting a post");
 
+    let [userLid, origin] = [
+      (req as any).user,
+      req.body.origin,
+    ];
+
+    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
+      origin = new ObjectId(origin);
+    } else {
+      throw { message: "Origin is not a valid ObjectId", statusCode: 400 }
+    }
+
+    await adminService.deletePost(userLid, origin);
+
+    res
+      .status(200)
+      .json({
+        message: "Post deleted succesfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
