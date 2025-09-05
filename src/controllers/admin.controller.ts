@@ -31,4 +31,32 @@ export const banUser = async (
   }
 }
 
+export const unbanUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/admin/unban-user - Unbanning user");
+
+    const [userLid, secondUserLid] = [
+      (req as any).user,
+      req.body.ban_lid
+    ];
+
+    await adminService.unbanUser(userLid, secondUserLid);
+
+    res
+      .status(200)
+      .json({
+        message: "User unbanned succesfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
+
 
