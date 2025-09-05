@@ -24,6 +24,8 @@ const router = Router();
  *         description: User loaded successfully
  *       400:
  *         description: Invalid request parameters
+ *       403:
+ *         descritpion: Banned requester
  *       404:
  *         description: User not found
  *       500:

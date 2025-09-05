@@ -25,7 +25,7 @@ const router = Router();
  *       200:
  *         description: Invite sent successfully
  *       403:
- *         description: User is blocked or blocking the target user
+ *         description: User is blocked or blocking the target user OR banned requester
  *       404:
  *         description: Target user not found
  *       409:
@@ -59,7 +59,7 @@ router.post("/create", handleAuth, postsController.sendPost);
  *       200:
  *         description: Invite sent successfully
  *       403:
- *         description: User is blocked or blocking the target user
+ *         description: User is blocked or blocking the target user OR banned requester
  *       404:
  *         description: Target user not found
  *       409:
@@ -93,7 +93,7 @@ router.post("/delete", handleAuth, postsController.deletePost);
  *       200:
  *         description: Invite sent successfully
  *       403:
- *         description: User is blocked or blocking the target user
+ *         description: User is blocked or blocking the target user OR banned requester
  *       404:
  *         description: Target user not found
  *       409:
@@ -127,7 +127,7 @@ router.post("/like", handleAuth, postsController.likePost);
  *       200:
  *         description: Invite sent successfully
  *       403:
- *         description: User is blocked or blocking the target user
+ *         description: User is blocked or blocking the target user OR banned requester
  *       404:
  *         description: Target user not found
  *       409:
@@ -175,7 +175,7 @@ router.post("/unlike", handleAuth, postsController.unlikePost);
  *       400:
  *         description: Invalid request parameters
  *       403:
- *         description: You can access only friends posts
+ *         description: You can access only friends posts OR banned requester
  *       404:
  *         description: Origin not found
  *       500:

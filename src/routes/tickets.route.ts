@@ -28,6 +28,8 @@ const router = Router();
  *         description: Invite sent successfully
  *       400:
  *         description: Invalid post ID
+ *       403:
+ *         descritpion: Banned requester
  *       404:
  *         description: User or post not found
  *       500:
@@ -63,7 +65,7 @@ router.post("/create", handleAuth, ticketsController.createTicket);
  *       200:
  *         description: Invite sent successfully
  *       403:
- *         description: Forbidden
+ *         description: Forbidden OR banned requester
  *       404:
  *         description: Ticket not found
  *       500:
@@ -127,7 +129,7 @@ router.post("/close", handleAuth, ticketsController.closeTicket);
  *       400:
  *         description: Invalid request parameters
  *       403:
- *         description: You can access only your tickets
+ *         description: You can access only your tickets OR banned requester
  *       404:
  *         description: Ticket not found
  *       500:
@@ -165,6 +167,8 @@ router.get("/load-ticket", handleAuth, ticketsController.loadTicket);
  *         description: Tickets loaded successfully
  *       400:
  *         description: Invalid request parameters
+ *       403:
+ *         descritpion: Banned requester
  *       500:
  *         description: Internal server error
  *       503:

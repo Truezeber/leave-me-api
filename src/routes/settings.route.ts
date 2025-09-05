@@ -26,6 +26,8 @@ const router = Router();
  *         description: Invalid avatar URL
  *       401:
  *         description: Unauthorized
+ *       403:
+ *         descritpion: Banned requester
  *       500:
  *         description: Internal server error
  *       503:
@@ -58,6 +60,8 @@ router.post("/change-avatar", handleAuth, settingsController.changeAvatar);
  *         description: Invalid background URL
  *       401:
  *         description: Unauthorized
+ *       403:
+ *         descritpion: Banned requester
  *       500:
  *         description: Internal server error
  *       503:
@@ -91,6 +95,8 @@ router.post("/change-background", handleAuth, settingsController.changeBackgroun
  *         description: Invalid nickname
  *       401:
  *         description: Unauthorized
+ *       403:
+ *         descritpion: Banned requester
  *       500:
  *         description: Internal server error
  *       503:
@@ -123,6 +129,8 @@ router.post("/change-nickname", handleAuth, settingsController.changeNickname);
  *         description: Status too long
  *       401:
  *         description: Unauthorized
+ *       403:
+ *         descritpion: Banned requester
  *       500:
  *         description: Internal server error
  *       503:
@@ -158,6 +166,8 @@ router.post("/change-status", handleAuth, settingsController.changeStatus);
  *         description: Invalid password
  *       401:
  *         description: Unauthorized or wrong credentials
+ *       403:
+ *         descritpion: Banned requester
  *       500:
  *         description: Internal server error
  *       503:

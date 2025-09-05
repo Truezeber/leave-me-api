@@ -23,7 +23,7 @@ const router = Router();
  *       200:
  *         description: Invite sent successfully
  *       403:
- *         description: User is blocked or blocking the target user
+ *         description: User is blocked or blocking the target user OR banned requester
  *       404:
  *         description: Target user not found
  *       409:
@@ -56,6 +56,8 @@ router.post("/invite", handleAuth, friendsController.inviteFriend);
  *     responses:
  *       200:
  *         description: Invite accepted successfully
+ *       403:
+ *         descritpion: Banned requester
  *       404:
  *         description: Invite not found
  *       500:
@@ -86,6 +88,8 @@ router.post("/accept", handleAuth, friendsController.acceptFriend);
  *     responses:
  *       200:
  *         description: Invite rejected successfully
+ *       403:
+ *         descritpion: Banned requester
  *       404:
  *         description: Invite not found
  *       500:
@@ -116,6 +120,8 @@ router.post("/reject", handleAuth, friendsController.rejectFriend);
  *     responses:
  *       200:
  *         description: Invite canceled successfully
+ *       403:
+ *         descritpion: Banned requester
  *       404:
  *         description: Invite not found
  *       500:
@@ -146,6 +152,8 @@ router.post("/cancel", handleAuth, friendsController.cancelInvite);
  *     responses:
  *       200:
  *         description: Friend deleted successfully
+ *       403:
+ *         descritpion: Banned requester
  *       404:
  *         description: Friend not found
  *       500:
@@ -177,6 +185,8 @@ router.post("/delete", handleAuth, friendsController.deleteFriend);
  *                   type: array
  *                   items:
  *                     type: string
+ *       403:
+ *         description: Banned requester
  *       500:
  *         description: Internal server error
  *       503:
@@ -206,6 +216,8 @@ router.get("/friends-list", handleAuth, friendsController.getFriendsList);
  *                   type: array
  *                   items:
  *                     type: string
+ *       403:
+ *         description: Banned requester
  *       500:
  *         description: Internal server error
  *       503:
@@ -235,6 +247,8 @@ router.get("/invites-sent-list", handleAuth, friendsController.getInvitesSentLis
  *                   type: array
  *                   items:
  *                     type: string
+ *       403:
+ *         description: Banned requester
  *       500:
  *         description: Internal server error
  *       503:

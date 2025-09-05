@@ -19,10 +19,6 @@ export const blockUser = async (
       leave_me_id: leave_me_id,
     })) as User;
 
-    if (user.is_banned) {
-      throw { message: "You are banned", statusCode: 403 };
-    }
-
     //? DDOSing database, great idea
     const areFriends = await relations.areFriends(leave_me_id, user_lid);
     if (areFriends) {
@@ -73,10 +69,6 @@ export const unblockUser = async (
       leave_me_id: leave_me_id,
     })) as User;
 
-    if (user.is_banned) {
-      throw { message: "You are banned", statusCode: 403 };
-    }
-
     const userBlocked = await relations.isBlocked(leave_me_id, user_lid);
     if (!userBlocked) {
       throw { message: "User not blocked", statusCode: 409 };
@@ -109,10 +101,6 @@ export const getBlocks = async (
     const user: User = (await collection.findOne({
       leave_me_id: leave_me_id,
     })) as User;
-
-    if (user.is_banned) {
-      throw { message: "You are banned", statusCode: 403 };
-    }
 
     return user.blocked;
   } catch (error) {

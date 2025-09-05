@@ -24,6 +24,8 @@ const router = Router();
  *             description: Clears the JWT access_token and refresh_token cookies
  *       401:
  *         description: Unauthorized, invalid or missing access_token
+ *       403:
+ *         descritpion: Banned requester
  *       500:
  *         description: Internal server error
  */
