@@ -3,6 +3,7 @@ import { User } from "../models/user.model";
 import { Post } from "../models/posts.models";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
+import { Notifier, Notification } from "../models/notifications.model";
 
 export const banUser = async (
   leave_me_id: string,
@@ -15,6 +16,7 @@ export const banUser = async (
     }
 
     const usersCollection = mainDb.collection<User>("users");
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
 
     const adminUser = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
 
@@ -33,6 +35,18 @@ export const banUser = async (
     }
 
     await usersCollection.updateOne({ leave_me_id: target_id }, { $set: { is_banned: true } });
+
+    const newNotification: Notification = {
+      type: "ban",
+      notification_user: target_id,
+      clickable_content: "url",
+      content: "You can ask for unban.",
+      createdAt: new Date(),
+      isSeen: false
+    }
+
+    await notificationsCollection.updateOne({ leave_me_id: target_id }, { $push: { notifications: newNotification } });
+
     return "Success";
   } catch (error) {
     logger.error("Error banning a user:", error);
