@@ -4,6 +4,7 @@ import { Post } from "../models/posts.models";
 import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
 import { ObjectId, Sort } from "mongodb";
+import { Notifier, Notification } from "../models/notifications.model";
 
 export const createPost = async (
   leave_me_id: string,
@@ -18,6 +19,7 @@ export const createPost = async (
 
     const userCollection = mainDb.collection<User>("users");
     const postsCollection = mainDb.collection<Post>("posts");
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
 
     if (origin instanceof ObjectId) {
       const originPost: Post = (await postsCollection.findOne({ _id: origin })) as Post;
@@ -62,6 +64,26 @@ export const createPost = async (
     }
 
     await postsCollection.insertOne(newPost);
+
+    if (origin instanceof ObjectId) {
+      const originPost: Post = await postsCollection.findOne({ _id: origin }) as Post;
+
+      const fullContent = newPost.content;
+      const maxLength = 100;
+      const shortedContent = fullContent.length > maxLength ? fullContent.slice(0, maxLength) + "..." : fullContent;
+
+      const newNotification: Notification = {
+        type: "comment",
+        notification_user: leave_me_id,
+        clickable_content: origin,
+        content: shortedContent,
+        createdAt: new Date(),
+        isSeen: false
+      }
+
+      await notificationsCollection.updateOne({ leave_me_id: originPost.author }, { $push: { notifications: newNotification } });
+
+    }
 
     return newPost;
   } catch (error) {
