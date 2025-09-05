@@ -3,6 +3,11 @@ import { config } from "./config/app.config";
 import { logger } from "./utils/logger.utils";
 import { initializeApp } from "./loaders";
 import cookieParser from "cookie-parser";
+import http from "http";
+import { Server as SocketIOServer } from "socket.io";
+import cors from "cors";
+
+let io: SocketIOServer;
 
 if (config.jwtSecret === "NO_JWT") {
   logger.error(
@@ -23,8 +28,16 @@ if (config.resendKey === "NO_RESEND") {
 const startServer = async () => {
   const app = express();
   const PORT = config.port;
+  const server = http.createServer(app);
+  io = new SocketIOServer(server, {
+    cors: { origin: "*", credentials: true },
+  });
 
   app.use(cookieParser());
+  app.use(cors({
+    origin: ["http://localhost:3000", "https://leavemeanote.site"],
+    credentials: true
+  }));
 
   await initializeApp(app);
 
@@ -39,3 +52,7 @@ startServer().catch((err) => {
   logger.error("Failed to start server:", err);
   process.exit(1);
 });
+
+export { io };
+
+import "./sockets";
