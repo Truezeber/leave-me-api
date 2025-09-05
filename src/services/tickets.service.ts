@@ -5,6 +5,7 @@ import { Ticket, TicketCategory, TicketMessage } from "../models/tickets.model";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
 import { randomInt } from "crypto";
+import { Notifier, Notification } from "../models/notifications.model";
 
 export const createTicket = async (
   leave_me_id: string,
@@ -114,6 +115,8 @@ export const message = async (
     const ticketsCollection = mainDb.collection<Ticket>("tickets");
     const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
 
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+
     if (!ticket) {
       throw { message: "Ticket not found", statusCode: 404 };
     }
@@ -142,6 +145,25 @@ export const message = async (
     }
 
     await ticketsCollection.updateOne({ ticketId: ticket_id }, { $push: { messages: newMessage } });
+
+    const longContent = content;
+    const maxLength = 100;
+    const shortedContent = longContent.length > maxLength ? longContent.slice(0, maxLength) + "..." : longContent;
+
+    for (const ticketParticipant of ticket.participants) {
+      if (ticketParticipant !== leave_me_id) {
+        const newNotification: Notification = {
+          type: "ticket",
+          notification_user: ticketParticipant,
+          clickable_content: ticket_id,
+          content: shortedContent,
+          createdAt: new Date(),
+          isSeen: false
+        }
+
+        await notificationsCollection.updateOne({ leave_me_id: ticketParticipant }, { $push: { notifications: newNotification } });
+      }
+    }
 
     return newMessage;
   } catch (error) {
