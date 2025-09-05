@@ -70,4 +70,38 @@ router.post("/ban-user", handleAuth, adminController.banUser);
 
 router.post("/unban-user", handleAuth, adminController.unbanUser);
 
+/**
+ * @swagger
+ *
+ * /api/v1/admin/delete-post:
+ *   post:
+ *     summary: Deletes a post.
+ *     tags: [Admin]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             origin:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Post deleted successfully
+ *       400:
+ *         description: Invalid origin
+ *       403:
+ *         description: No admin permissions
+ *       404:
+ *         description: Post not found
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/delete-post", handleAuth, adminController.deletePost);
+
 
