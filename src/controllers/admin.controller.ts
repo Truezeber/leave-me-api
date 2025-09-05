@@ -93,3 +93,32 @@ export const deletePost = async (
     })
   }
 }
+
+export const grantBadge = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/admin/grant-badge - Granting a badge to a user");
+
+    const [userLid, secondUserLid, badge] = [
+      (req as any).user,
+      req.body.user_lid,
+      req.body.badge
+    ];
+
+    await adminService.grantBadge(userLid, secondUserLid, badge);
+
+    res
+      .status(200)
+      .json({
+        message: "Badge granted succesfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
