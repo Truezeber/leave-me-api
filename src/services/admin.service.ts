@@ -26,6 +26,10 @@ export const banUser = async (
       throw { message: "User not found", statusCode: 404 };
     }
 
+    if (targetUser.is_banned) {
+      throw { message: "User is banned", statusCode: 409 };
+    }
+
     await usersCollection.updateOne({ leave_me_id: target_id }, { $set: { is_banned: true } });
     return "Success";
   } catch (error) {
