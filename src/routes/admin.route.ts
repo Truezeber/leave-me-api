@@ -140,4 +140,40 @@ router.post("/delete-post", handleAuth, adminController.deletePost);
 
 router.post("/grant-badge", handleAuth, adminController.grantBadge);
 
+/**
+ * @swagger
+ *
+ * /api/v1/admin/revoke-badge:
+ *   post:
+ *     summary: Revokes a badge.
+ *     tags: [Admin]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             user_lid:
+ *               type: string
+ *             badge:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User banned successfully
+ *       403:
+ *         description: No admin permissions
+ *       404:
+ *         description: User not found
+ *       409:
+ *         descritpion: User already have this badge revoken
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
 
+router.post("/revoke-badge", handleAuth, adminController.revokeBadge);
+
+export default router;
