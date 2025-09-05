@@ -7,7 +7,7 @@ const router = Router();
  *
  * /api/v1/admin/ban-user:
  *   post:
- *     summary: Blocks user.
+ *     summary: Bans user.
  *     tags: [Admin]
  *     produces:
  *       - application/json
@@ -35,5 +35,39 @@ const router = Router();
  */
 
 router.post("/ban-user", handleAuth, adminController.banUser);
+
+/**
+ * @swagger
+ *
+ * /api/v1/admin/unban-user:
+ *   post:
+ *     summary: Unbans user.
+ *     tags: [Admin]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             ban_lid:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User unbanned successfully
+ *       403:
+ *         description: No admin permissions
+ *       404:
+ *         description: User not found
+ *       409:
+ *         descritpion: User is not banned
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/unban-user", handleAuth, adminController.unbanUser);
 
 
