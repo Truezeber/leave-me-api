@@ -22,6 +22,8 @@ const router = Router();
  *     responses:
  *       200:
  *         description: User blocked succesfully
+ *       403:
+ *         descritpion: Banned requester
  *       409:
  *         descritpion: User is either already blocked, invited to a friend, a friend or invited you to friends
  *       500:
@@ -52,6 +54,8 @@ router.post("/block-user", handleAuth, blocksController.blockUser);
  *     responses:
  *       200:
  *         description: User unblocked successfully
+ *       403:
+ *         descritpion: Banned requester
  *       409:
  *         description: User is not blocked
  *       500:
@@ -85,6 +89,8 @@ router.post("/unblock-user", handleAuth, blocksController.unblockUser);
  *                     type: string
  *       500:
  *         description: Internal server error
+ *       403:
+ *         descritpion: Banned requester
  *       503:
  *         description: Database error
  */

@@ -13,14 +13,15 @@ export const blockUser = async (
       throw { message: "Database client is not available", statusCode: 503 };
     }
 
-    //TODO this part should be deleted everywhere. Useless db call
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
 
     const user: User = (await collection.findOne({
       leave_me_id: leave_me_id,
     })) as User;
-    logger.info("User:", user);
+
+    if (user.is_banned) {
+      throw { message: "You are banned", statusCode: 403 };
+    }
 
     //? DDOSing database, great idea
     const areFriends = await relations.areFriends(leave_me_id, user_lid);
@@ -71,7 +72,10 @@ export const unblockUser = async (
     const user: User = (await collection.findOne({
       leave_me_id: leave_me_id,
     })) as User;
-    logger.info("User:", user);
+
+    if (user.is_banned) {
+      throw { message: "You are banned", statusCode: 403 };
+    }
 
     const userBlocked = await relations.isBlocked(leave_me_id, user_lid);
     if (!userBlocked) {
@@ -105,7 +109,10 @@ export const getBlocks = async (
     const user: User = (await collection.findOne({
       leave_me_id: leave_me_id,
     })) as User;
-    logger.info("User:", user);
+
+    if (user.is_banned) {
+      throw { message: "You are banned", statusCode: 403 };
+    }
 
     return user.blocked;
   } catch (error) {
