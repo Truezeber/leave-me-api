@@ -128,13 +128,17 @@ export const grantBadge = async (
       throw { message: "You can't do that", statusCode: 403 };
     }
 
-    const userHaveBadge = await usersColection.findOne({ leave_me_id: target_id, badges: badge });
+    const user = await usersColection.findOne({ leave_me_id: target_id }) as User;
 
-    if (userHaveBadge) {
+    if (!user) {
+      throw { message: "User not found", statusCode: 404 }
+    }
+
+    if (user.badges.includes(badge)) {
       throw { message: "User already have this badge", statusCode: 409 };
     }
 
-    await usersColection.updateOne({ leave_me_id: leave_me_id }, { $push: { badges: badge } });
+    await usersColection.updateOne({ leave_me_id: target_id }, { $push: { badges: badge } });
     return "Success";
   } catch (error) {
     logger.error("Error granting a badge:", error);
@@ -161,13 +165,17 @@ export const revokeBadge = async (
       throw { message: "You can't do that", statusCode: 403 };
     }
 
-    const userHaveBadge = await usersColection.findOne({ leave_me_id: target_id, badges: badge });
+    const user = await usersColection.findOne({ leave_me_id: target_id }) as User;
 
-    if (!userHaveBadge) {
+    if (!user) {
+      throw { message: "User not found", statusCode: 404 };
+    }
+
+    if (!user.badges.includes(badge)) {
       throw { message: "User doesn't have this badge", statusCode: 409 };
     }
 
-    await usersColection.updateOne({ leave_me_id: leave_me_id }, { $pull: { badges: badge } });
+    await usersColection.updateOne({ leave_me_id: target_id }, { $pull: { badges: badge } });
     return "Success";
   } catch (error) {
     logger.error("Error revoking a badge:", error);
