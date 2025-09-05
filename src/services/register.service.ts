@@ -3,6 +3,7 @@ import { User, UserConfirmation, UserRegister } from "../models/user.model";
 import { auth } from "../utils/auth.utils";
 import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
+import { Notifier } from "../models/notifications.model";
 
 export const registerUser = async (user: UserRegister): Promise<string[]> => {
   try {
@@ -43,6 +44,7 @@ export const registerUser = async (user: UserRegister): Promise<string[]> => {
 
     const collection = mainDb.collection<User>("users");
     const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
     const confirmedUser = await confirmationCollection.findOne({ email: user.email });
 
     logger.info("Mongo collection", collection);
@@ -87,6 +89,11 @@ export const registerUser = async (user: UserRegister): Promise<string[]> => {
       join_date: new Date(),
       refresh_tokens: [auth.generateRefreshToken()],
     };
+
+    const newNotifier: Notifier = {
+      leave_me_id: user.leave_me_id,
+      notifications: []
+    }
     logger.info("Registering user:", newUser);
 
     const result = await collection.insertOne(newUser);
@@ -95,6 +102,9 @@ export const registerUser = async (user: UserRegister): Promise<string[]> => {
       logger.error("Failed to insert user");
       throw new Error("Failed to insert user");
     }
+
+    await notificationsCollection.insertOne(newNotifier);
+
     logger.success(
       `User registered successfully with ID: ${result.insertedId}`
     );
