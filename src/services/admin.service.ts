@@ -1,6 +1,8 @@
 import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
+import { Post } from "../models/posts.models";
 import { logger } from "../utils/logger.utils";
+import { ObjectId } from "mongodb";
 
 export const banUser = async (
   leave_me_id: string,
@@ -73,4 +75,37 @@ export const unbanUser = async (
     throw error;
   }
 };
+
+export const deletePost = async (
+  leave_me_id: string,
+  post_id: ObjectId
+): Promise<string> => {
+  try {
+    if (!client) {
+      logger.warn("Database client is not available");
+      throw { message: "Database client is not available", statusCode: 503 };
+    }
+
+    const usersCollection = mainDb.collection<User>("users");
+    const postsCollection = mainDb.collection<Post>("posts");
+
+    const adminUser = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
+
+    if (!adminUser.is_admin) {
+      throw { message: "You can't do that", statusCode: 403 };
+    }
+
+    const targetPost = await postsCollection.findOne({ _id: post_id }) as Post;
+
+    if (!targetPost) {
+      throw { message: "Post not found", statusCode: 404 };
+    }
+
+    await postsCollection.deleteOne({ _id: post_id });
+    return "Success";
+  } catch (error) {
+    logger.error("Error deleting a post:", error);
+    throw error;
+  }
+}
 
