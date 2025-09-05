@@ -4,7 +4,7 @@ export interface Notification {
   _id?: ObjectId;
   type: "like" | "comment" | "invite" | "ban" | "ticket";
   notification_user: string;
-  clickable_content: string;
+  clickable_content: string | ObjectId;
   content: string;
   createdAt: Date;
   isSeen: boolean;
