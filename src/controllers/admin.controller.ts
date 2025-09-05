@@ -122,3 +122,32 @@ export const grantBadge = async (
     })
   }
 }
+
+export const revokeBadge = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    logger.info("POST /api/admin/revoke-badge - Revoking a badge to a user");
+
+    const [userLid, secondUserLid, badge] = [
+      (req as any).user,
+      req.body.user_lid,
+      req.body.badge
+    ];
+
+    await adminService.revokeBadge(userLid, secondUserLid, badge);
+
+    res
+      .status(200)
+      .json({
+        message: "Badge revoked succesfully"
+      });
+
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({
+      error: error.message || "Something went wrong",
+    })
+  }
+}
