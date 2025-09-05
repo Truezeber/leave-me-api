@@ -104,4 +104,40 @@ router.post("/unban-user", handleAuth, adminController.unbanUser);
 
 router.post("/delete-post", handleAuth, adminController.deletePost);
 
+/**
+ * @swagger
+ *
+ * /api/v1/admin/grant-badge:
+ *   post:
+ *     summary: Grants a badge.
+ *     tags: [Admin]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             user_lid:
+ *               type: string
+ *             badge:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User banned successfully
+ *       403:
+ *         description: No admin permissions
+ *       404:
+ *         description: User not found
+ *       409:
+ *         descritpion: User already have this badge
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/grant-badge", handleAuth, adminController.grantBadge);
+
 
