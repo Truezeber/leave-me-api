@@ -5,7 +5,6 @@ import { logger } from "../utils/logger.utils";
 import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 
-// Tworzymy własny typ Request z dodatkowym polem `user`
 interface AuthRequest extends Request {
   user?: string;
 }
@@ -67,6 +66,20 @@ export const handleAuth: RequestHandler = async (
   }
 };
 
+export const handleAuthNoAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.cookies.access_token) {
+    const accessToken = req.cookies.access_token;
+    const payload = auth.verifyJwt(accessToken);
 
-
-
+    if (payload && payload !== "expired") {
+      (req as any).user = payload.leave_me_id;
+      next();
+    } else if (payload === "expired") {
+      res.status(401).json({ error: "Access token expired" });
+    } else {
+      res.status(401).json({ error: "Unauthorized" });
+    }
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+};
