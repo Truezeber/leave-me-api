@@ -141,6 +141,7 @@ export const likePost = async (
     }
 
     const postsCollection = mainDb.collection<Post>("posts");
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
 
     const post: Post = (await postsCollection.findOne({ _id: post_id })) as Post;
 
@@ -168,6 +169,25 @@ export const likePost = async (
       { _id: post_id },
       { $addToSet: { likes: leave_me_id } }
     )
+
+    const originPost: Post = await postsCollection.findOne({ _id: post_id }) as Post;
+
+    const fullContent = originPost.content;
+    const maxLength = 100;
+    const shortedContent = fullContent.length > maxLength ? fullContent.slice(0, maxLength) + "..." : fullContent;
+
+    const newNotification: Notification = {
+      type: "like",
+      notification_user: leave_me_id,
+      clickable_content: post_id,
+      content: shortedContent,
+      createdAt: new Date(),
+      isSeen: false
+    }
+
+    await notificationsCollection.updateOne({ leave_me_id: originPost.author }, { $push: { notifications: newNotification } });
+
+
 
     return "Success";
   } catch (error) {
