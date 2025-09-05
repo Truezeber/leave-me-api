@@ -1,0 +1,39 @@
+import { Router } from "express";
+import * as adminController from "../controllers/admin.controller";
+import { handleAuth } from "../middlewares/auth.middleware";
+const router = Router();
+/**
+ * @swagger
+ *
+ * /api/v1/admin/ban-user:
+ *   post:
+ *     summary: Blocks user.
+ *     tags: [Admin]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             ban_lid:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User banned successfully
+ *       403:
+ *         description: No admin permissions
+ *       404:
+ *         description: User not found
+ *       409:
+ *         descritpion: User is already banned
+ *       500:
+ *         description: Internal server error
+ *       503:
+ *         description: Database error
+ */
+
+router.post("/ban-user", handleAuth, adminController.banUser);
+
+
