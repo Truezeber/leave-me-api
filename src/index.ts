@@ -1,13 +1,12 @@
 import express from "express";
+import { createServer } from "node:http";
 import { config } from "./config/app.config";
+import { corsConfig } from "./config/cors.config";
 import { logger } from "./utils/logger.utils";
 import { initializeApp } from "./loaders";
 import cookieParser from "cookie-parser";
-import http from "http";
-import { Server as SocketIOServer } from "socket.io";
 import cors from "cors";
-
-let io: SocketIOServer;
+import { Server } from 'socket.io';
 
 if (config.jwtSecret === "NO_JWT") {
   logger.error(
@@ -28,20 +27,20 @@ if (config.resendKey === "NO_RESEND") {
 const startServer = async () => {
   const app = express();
   const PORT = config.port;
-  const server = http.createServer(app);
-  io = new SocketIOServer(server, {
-    cors: { origin: "*", credentials: true },
-  });
 
   app.use(cookieParser());
-  app.use(cors({
-    origin: ["http://localhost:3000", "https://leavemeanote.site"],
-    credentials: true
-  }));
+  app.use(cors(corsConfig));
 
   await initializeApp(app);
 
-  app.listen(PORT, () => {
+  const server = createServer(app);
+  const io = new Server(server, { cors: corsConfig });
+
+  io.on('connection', (socket) => {
+    logger.info('User connected');
+  });
+
+  server.listen(PORT, () => {
     logger.success("Server started succesfully");
     logger.info(`Server running on http://localhost:${PORT}`);
     logger.info("API docs: http://localhost:3000/api-docs/#/");
@@ -52,7 +51,3 @@ startServer().catch((err) => {
   logger.error("Failed to start server:", err);
   process.exit(1);
 });
-
-export { io };
-
-import "./sockets";
