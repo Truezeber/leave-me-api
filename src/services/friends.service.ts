@@ -3,6 +3,7 @@ import { User } from "../models/user.model";
 import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
 import { Notifier, Notification } from "../models/notifications.model";
+import { sendNotification } from "../sockets";
 
 export const inviteFriend = async (
   leave_me_id: string,
@@ -78,6 +79,7 @@ export const inviteFriend = async (
     }
 
     await notificationsCollection.updateOne({ leave_me_id: friend_lid }, { $push: { notifications: newNotification } });
+    sendNotification(friend_lid, newNotification);
 
     return "Success";
   } catch (error) {
@@ -137,6 +139,7 @@ export const acceptFriend = async (
     }
 
     await notificationsCollection.updateOne({ leave_me_id: friend_lid }, { $push: { notifications: newNotification } });
+    sendNotification(friend_lid, newNotification);
 
     return "Success";
   } catch (error) {

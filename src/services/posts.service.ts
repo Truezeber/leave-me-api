@@ -189,7 +189,6 @@ export const likePost = async (
     }
 
     await notificationsCollection.updateOne({ leave_me_id: originPost.author }, { $push: { notifications: newNotification } });
-
     sendNotification(originPost.author, newNotification);
 
     return "Success";
