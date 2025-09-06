@@ -75,6 +75,7 @@ export const createPost = async (
       const shortedContent = fullContent.length > maxLength ? fullContent.slice(0, maxLength) + "..." : fullContent;
 
       const newNotification: Notification = {
+        _id: new ObjectId(),
         type: "comment",
         notification_user: leave_me_id,
         clickable_content: origin,
@@ -180,6 +181,7 @@ export const likePost = async (
     const shortedContent = fullContent.length > maxLength ? fullContent.slice(0, maxLength) + "..." : fullContent;
 
     const newNotification: Notification = {
+      _id: new ObjectId(),
       type: "like",
       notification_user: leave_me_id,
       clickable_content: post_id,

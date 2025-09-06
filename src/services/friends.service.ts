@@ -4,6 +4,7 @@ import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
 import { Notifier, Notification } from "../models/notifications.model";
 import { sendNotification } from "../sockets";
+import { ObjectId } from "mongodb";
 
 export const inviteFriend = async (
   leave_me_id: string,
@@ -70,6 +71,7 @@ export const inviteFriend = async (
     );
 
     const newNotification: Notification = {
+      _id: new ObjectId(),
       type: "invite",
       notification_user: leave_me_id,
       clickable_content: leave_me_id,
@@ -130,6 +132,7 @@ export const acceptFriend = async (
     );
 
     const newNotification: Notification = {
+      _id: new ObjectId(),
       type: "invite",
       notification_user: leave_me_id,
       clickable_content: leave_me_id,
