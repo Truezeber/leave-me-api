@@ -6,6 +6,7 @@ import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
 import { randomInt } from "crypto";
 import { Notifier, Notification } from "../models/notifications.model";
+import { sendNotification } from "../sockets";
 
 export const createTicket = async (
   leave_me_id: string,
@@ -153,6 +154,7 @@ export const message = async (
     for (const ticketParticipant of ticket.participants) {
       if (ticketParticipant !== leave_me_id) {
         const newNotification: Notification = {
+          _id: new ObjectId(),
           type: "ticket",
           notification_user: ticketParticipant,
           clickable_content: ticket_id,
@@ -162,6 +164,7 @@ export const message = async (
         }
 
         await notificationsCollection.updateOne({ leave_me_id: ticketParticipant }, { $push: { notifications: newNotification } });
+        sendNotification(ticketParticipant, newNotification);
       }
     }
 
