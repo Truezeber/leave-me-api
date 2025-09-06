@@ -4,6 +4,7 @@ import { Post } from "../models/posts.models";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
 import { Notifier, Notification } from "../models/notifications.model";
+import { sendNotification } from "../sockets";
 
 export const banUser = async (
   leave_me_id: string,
@@ -37,6 +38,7 @@ export const banUser = async (
     await usersCollection.updateOne({ leave_me_id: target_id }, { $set: { is_banned: true } });
 
     const newNotification: Notification = {
+      _id: new ObjectId(),
       type: "ban",
       notification_user: target_id,
       clickable_content: "url",
@@ -46,6 +48,7 @@ export const banUser = async (
     }
 
     await notificationsCollection.updateOne({ leave_me_id: target_id }, { $push: { notifications: newNotification } });
+    sendNotification(target_id, newNotification);
 
     return "Success";
   } catch (error) {
