@@ -5,6 +5,7 @@ import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
 import { ObjectId, Sort } from "mongodb";
 import { Notifier, Notification } from "../models/notifications.model";
+import { sendNotification } from "../sockets";
 
 export const createPost = async (
   leave_me_id: string,
@@ -55,6 +56,7 @@ export const createPost = async (
     }
 
     const newPost: Post = {
+      _id: new ObjectId(),
       author: leave_me_id,
       createTime: new Date(),
       origin: origin,
@@ -82,6 +84,7 @@ export const createPost = async (
       }
 
       await notificationsCollection.updateOne({ leave_me_id: originPost.author }, { $push: { notifications: newNotification } });
+      sendNotification(originPost.author, newNotification);
 
     }
 

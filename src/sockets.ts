@@ -1,5 +1,5 @@
 
-import { Server, Socket } from "socket.io";
+import { Socket } from "socket.io";
 import { parse } from "cookie";
 import { logger } from "./utils/logger.utils";
 import { auth } from "./utils/auth.utils";
@@ -48,6 +48,7 @@ export const initSockets = () => {
   });
 };
 
-export const sentNotification = (leave_me_id: string, notification: any): void => {
+export const sendNotification = (leave_me_id: string, notification: any): void => {
+  logger.info(`Function call leave_me_id: ${leave_me_id} | notification: ${notification}`);
   io.to(leave_me_id).emit("notification", notification);
 }
