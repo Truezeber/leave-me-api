@@ -11,6 +11,7 @@ import postsRouter from "../routes/posts.route";
 import usersRouter from "../routes/users.route";
 import ticketsRouter from "../routes/tickets.route";
 import adminRouter from "../routes/admin.route";
+import notificationsRouter from "../routes/notifications.route";
 
 export const setupRoutes = (app: Application): void => {
   app.use("/api/v1/auth", registerRouter);
@@ -25,4 +26,5 @@ export const setupRoutes = (app: Application): void => {
   app.use("/api/v1/users", usersRouter);
   app.use("/api/v1/tickets", ticketsRouter);
   app.use("/api/v1/admin", adminRouter);
+  app.use("/api/v1/notifications", notificationsRouter);
 };
