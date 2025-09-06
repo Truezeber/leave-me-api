@@ -7,6 +7,9 @@ import { initializeApp } from "./loaders";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { Server } from 'socket.io';
+import { initSockets } from "./sockets";
+
+export let io: Server;
 
 if (config.jwtSecret === "NO_JWT") {
   logger.error(
@@ -34,11 +37,9 @@ const startServer = async () => {
   await initializeApp(app);
 
   const server = createServer(app);
-  const io = new Server(server, { cors: corsConfig });
+  io = new Server(server, { cors: corsConfig, cookie: true });
 
-  io.on('connection', (socket) => {
-    logger.info('User connected');
-  });
+  initSockets();
 
   server.listen(PORT, () => {
     logger.success("Server started succesfully");
