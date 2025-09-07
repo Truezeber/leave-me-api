@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
+import { validator } from "../utils/validators.utils";
 import { transformer } from "../utils/transformers.utils";
 
 import * as verifyService from "../services/verify.service";
@@ -12,6 +13,11 @@ export const requestSignup = async (
     logger.info("POST /api/v1/auth/request-signup - Sending confirmation e-mail");
 
     const [email] = transformer.toString(req.body.email);
+
+    if (!validator.email(email)) {
+      logger.warn("Invalid email");
+      throw { message: "Invalid email", statusCode: 400 };
+    }
 
     await verifyService.requestSignup(email);
 
@@ -38,6 +44,11 @@ export const requestNewPin = async (
 
     const [email] = transformer.toString(req.body.email);
 
+    if (!validator.email(email)) {
+      logger.warn("Invalid email");
+      throw { message: "Invalid email", statusCode: 400 };
+    }
+
     await verifyService.requestNewPin(email);
 
     res
@@ -62,6 +73,11 @@ export const confirmPin = async (
     logger.info("POST /api/v1/auth/request-verify - Verifying PIN");
 
     const [email, pin] = transformer.toString(req.body.email, req.body.pin);
+
+    if (!validator.email(email)) {
+      logger.warn("Invalid email");
+      throw { message: "Invalid email", statusCode: 400 };
+    }
 
     await verifyService.confirmPin(email, pin);
 

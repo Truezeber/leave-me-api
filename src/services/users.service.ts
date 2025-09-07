@@ -16,6 +16,7 @@ export const getUser = async (
     const usersCollection = mainDb.collection<User>("users");
 
     const user = await usersCollection.findOne({ leave_me_id: target });
+
     let returnUser: ReturnUser | ReturnShortUser;
 
     if (user) {
