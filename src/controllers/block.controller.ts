@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
+import { transformer } from "../utils/transformers.utils";
 
 import * as blockService from "../services/block.service";
 
@@ -8,12 +9,9 @@ export const blockUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/block/block-user - Blocking user");
+    logger.info("POST /api/v1/block/block-user - Blocking user");
 
-    const [userLid, secondUserLid] = [
-      (req as any).user,
-      req.body.blockLid
-    ];
+    const [userLid, secondUserLid] = transformer.toString((req as any).user, req.body.blockLid);
 
     await blockService.blockUser(userLid, secondUserLid);
 
@@ -36,12 +34,9 @@ export const unblockUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/block/unblock-user - Unblocking user");
+    logger.info("POST /api/v1/block/unblock-user - Unblocking user");
 
-    const [userLid, secondUserLid] = [
-      (req as any).user,
-      req.body.blockLid
-    ];
+    const [userLid, secondUserLid] = transformer.toString((req as any).user, req.body.blockLid);
 
     await blockService.unblockUser(userLid, secondUserLid);
 
@@ -64,9 +59,9 @@ export const getBlocks = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/block/blocks - Getting blocks");
+    logger.info("POST /api/v1/block/blocks - Getting blocks");
 
-    const userLid = (req as any).user;
+    const [userLid] = transformer.toString((req as any).user);
 
     const list = (await blockService.getBlocks(userLid));
 
