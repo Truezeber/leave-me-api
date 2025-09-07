@@ -15,10 +15,6 @@ export const blockUser = async (
 
     const collection = mainDb.collection<User>("users");
 
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
-
     //? DDOSing database, great idea
     const areFriends = await relations.areFriends(leave_me_id, user_lid);
     if (areFriends) {
@@ -63,11 +59,6 @@ export const unblockUser = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
 
     const userBlocked = await relations.isBlocked(leave_me_id, user_lid);
     if (!userBlocked) {
@@ -96,7 +87,6 @@ export const getBlocks = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
 
     const user: User = (await collection.findOne({
       leave_me_id: leave_me_id,
