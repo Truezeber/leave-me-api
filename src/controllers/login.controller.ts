@@ -1,16 +1,20 @@
 import { Request, Response } from "express";
 import * as loginService from "../services/login.service";
 import { logger } from "../utils/logger.utils";
+import { transformer } from "../utils/transformers.utils";
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    logger.info("POST /api/login - Logging in user");
+    logger.info("POST /api/v1/auth/login - Logging in user");
+
+    const [leave_me_id, password] = transformer.toString(req.body.leave_me_id, req.body.password);
 
     const [refreshToken, accessToken] = await loginService.loginUser(
-      req.body.leave_me_id,
-      req.body.password,
+      leave_me_id,
+      password,
       req.body.remember_me
     );
+
     res
       .status(200)
       .cookie("refresh_token", refreshToken, {
