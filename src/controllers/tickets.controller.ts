@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
+import { transformer } from "../utils/transformers.utils";
 
 import * as ticketsService from "../services/tickets.service";
+import { TicketCategory } from "../models/tickets.model";
 
 export const createTicket = async (
   req: Request,
@@ -11,27 +13,23 @@ export const createTicket = async (
   try {
     logger.info("POST /api/v1/ticket/create - Creating a post");
 
-    let [userLid, category, reportedUser, reportedPost] = [
-      (req as any).user,
-      req.body.category,
-      req.body.reported_user,
-      req.body.reported_post
-    ];
+    const [userLid, category, reportedUser, reportedPostString] = transformer.toString((req as any).user, req.body.category, req.body.reported_user, req.body.reportedPost);
+    let reportedPostId: ObjectId | undefined;
 
     if (!["Report post", "Report user", "Delete account", "Unban request", "Data request", "Other"].includes(category)) {
       throw { message: "Invalid category", statusCode: 400 };
     }
 
-    if (reportedPost !== "") {
-      if (typeof reportedPost === "string" && reportedPost.length === 24 && /^[a-f0-9]+$/i.test(reportedPost)) {
-        reportedPost = new ObjectId(reportedPost);
+    if (reportedPostString !== "") {
+      if (reportedPostString.length === 24 && /^[a-f0-9]+$/i.test(reportedPostString)) {
+        reportedPostId = new ObjectId(reportedPostString);
       } else {
         throw { message: "Reported post is not a valid ObjectId", statusCode: 400 };
       }
     }
 
 
-    const response = await ticketsService.createTicket(userLid, category, reportedUser, reportedPost);
+    const response = await ticketsService.createTicket(userLid, category as TicketCategory, reportedUser, reportedPostId);
 
     res
       .status(200)
@@ -52,12 +50,8 @@ export const message = async (
   try {
     logger.info("POST /api/v1/tickets/message - Messaging in ticket");
 
-    let [userLid, ticketId, content, isComment] = [
-      (req as any).user,
-      req.body.ticket_id,
-      req.body.content,
-      req.body.is_comment
-    ];
+    const [userLid, ticketId, content] = transformer.toString((req as any).user, req.body.ticket_id, req.body.content);
+    const [isComment] = transformer.toBoolean(req.body.is_comment);
 
     const response = await ticketsService.message(userLid, ticketId, content, isComment);
 
@@ -75,10 +69,7 @@ export const closeTicket = async (
   try {
     logger.info("POST /api/v1/tickets/close - Closing a ticket");
 
-    let [userLid, ticketId] = [
-      (req as any).user,
-      req.body.ticket_id
-    ];
+    const [userLid, ticketId] = transformer.toString((req as any).user, req.body.ticket_id);
 
     const response = await ticketsService.closeTicket(userLid, ticketId);
 
@@ -96,10 +87,7 @@ export const loadTicket = async (
   try {
     logger.info("GET /api/v1/tickets/load-ticket - Loading a ticket");
 
-    let [userLid, ticketId] = [
-      (req as any).user,
-      req.query.ticket_id as string
-    ];
+    const [userLid, ticketId] = transformer.toString((req as any).user, req.query.ticket_id);
 
     const response = await ticketsService.loadTicket(userLid, ticketId);
 
@@ -117,23 +105,18 @@ export const loadTickets = async (
   try {
     logger.info("GET /api/v1/tickets/load-tickets - Loading tickets");
 
-    let [userLid, amount, sortBy] = [
-      (req as any).user,
-      req.query.amount,
-      req.query.sort_by as string
-    ];
-
-    const newAmount = Number(amount);
+    const [userLid, sortBy] = transformer.toString((req as any).user, req.query.sort_by);
+    const [amount] = transformer.toInt(req.body.amount);
 
     if (sortBy !== "newest" && sortBy !== "oldest") {
       throw { message: "Invalid sorting", statusCode: 400 };
     }
 
-    if (newAmount <= 0) {
+    if (amount <= 0) {
       throw { message: "Amount must be positive", statusCode: 400 };
     }
 
-    const response = await ticketsService.loadTickets(userLid, newAmount, sortBy);
+    const response = await ticketsService.loadTickets(userLid, amount, sortBy);
 
     res.status(200).json(response);
   } catch (error: any) {
