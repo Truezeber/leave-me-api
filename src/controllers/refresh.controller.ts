@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import * as refreshService from "../services/refresh.service";
 import { logger } from "../utils/logger.utils";
+import { transformer } from "../utils/transformers.utils";
 
 export const refreshToken = async (req: Request, res: Response): Promise<void> => {
   try {
     logger.info("POST /api/v1/auth/refresh-token - Refreshing token");
 
-    const refreshToken = req.cookies.refresh_token;
+    const [refreshToken] = transformer.toString(req.cookies.refresh_token);
 
     if (!refreshToken) {
       logger.warn("No refresh token provided");
