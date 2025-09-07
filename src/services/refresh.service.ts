@@ -13,7 +13,6 @@ export const refreshToken = async (refreshToken: string): Promise<string> => {
   const user = await collection.findOne({ refresh_tokens: refreshToken });
 
   if (!user) {
-    logger.warn("Refresh token not found in database");
     throw { message: "Refresh token invalid", statusCode: 401 };
   }
 
