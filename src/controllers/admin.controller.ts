@@ -62,11 +62,11 @@ export const deletePost = async (
   try {
     logger.info("POST /api/v1/admin/delete-post - Deleting a post");
 
-    const [userLid, origin] = transformer.toString((req as any).user, req.body.origin);
+    const [userLid, originString] = transformer.toString((req as any).user, req.body.origin);
     let originId: ObjectId;
 
-    if (origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
-      originId = new ObjectId(origin);
+    if (originString.length === 24 && /^[a-f0-9]+$/i.test(originString)) {
+      originId = new ObjectId(originString);
     } else {
       throw { message: "Origin is not a valid ObjectId", statusCode: 400 }
     }

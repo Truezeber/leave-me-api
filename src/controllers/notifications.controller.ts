@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
+import { transformer } from "../utils/transformers.utils";
 
 import * as notificationsService from "../services/notifications.service";
 
@@ -12,13 +13,11 @@ export const markAsSeen = async (
   try {
     logger.info("POST /api/v1/notifications/mark-as-seen - Marking notification as seen");
 
-    let [userLid, notificationId] = [
-      (req as any).user,
-      req.body.notification_id,
-    ];
+    const [userLid, notificationString] = transformer.toString((req as any).user, req.body.notification_id);
+    let notificationId: ObjectId;
 
-    if (typeof notificationId === "string" && notificationId.length === 24 && /^[a-f0-9]+$/i.test(notificationId)) {
-      notificationId = new ObjectId(notificationId);
+    if (notificationString.length === 24 && /^[a-f0-9]+$/i.test(notificationString)) {
+      notificationId = new ObjectId(notificationString);
     } else {
       throw { message: "notification_id is not a valid ObjectId", statusCode: 400 }
     }
@@ -44,12 +43,9 @@ export const loadNotifications = async (
   try {
     logger.info("GET /api/v1/notifications/load-notifications - Loading notifications");
 
-    let [userLid, amountRaw] = [
-      (req as any).user,
-      req.query.amount as string,
-    ];
+    const [userLid] = transformer.toString((req as any).user);
+    const [amount] = transformer.toInt(req.query.amount);
 
-    const amount = Number(amountRaw);
     if (isNaN(amount) || amount <= 0) {
       throw { message: "Invalid amount", statusCode: 400 };
     }
