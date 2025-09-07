@@ -19,17 +19,9 @@ export const inviteFriend = async (
     const collection = mainDb.collection<User>("users");
     const notificationsCollection = mainDb.collection<Notifier>("notifications");
 
-    logger.info("Mongo collection", collection);
-
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
-    logger.info("User:", user);
-
     const friend: User = (await collection.findOne({
       leave_me_id: friend_lid,
     })) as User;
-    logger.info("Friend:", friend);
 
     if (!friend) {
       throw { message: "Invalid friend ID", statusCode: 404 };
@@ -103,13 +95,6 @@ export const acceptFriend = async (
     const collection = mainDb.collection<User>("users");
     const notificationsCollection = mainDb.collection<Notifier>("notifications");
 
-    logger.info("Mongo collection", collection);
-
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
-    logger.info("User:", user);
-
     const isInvited = await relations.isInvited(leave_me_id, friend_lid);
     if (!isInvited) {
       throw { message: "This user is not inviting you", statusCode: 404 };
@@ -162,12 +147,6 @@ export const rejectFriend = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
-    logger.info("User:", user);
 
     const isInvited = await relations.isInvited(leave_me_id, friend_lid);
     if (!isInvited) {
@@ -206,12 +185,6 @@ export const cancelInvite = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
-    logger.info("User:", user);
 
     const isInviting = await relations.isInviting(leave_me_id, friend_lid);
     if (!isInviting) {
@@ -250,12 +223,6 @@ export const deleteFriend = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
-    logger.info("User:", user);
 
     const areFriends = await relations.areFriends(leave_me_id, friend_lid);
     if (!areFriends) {
@@ -293,7 +260,6 @@ export const getFriendsList = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
 
     const user = (await collection.findOne(
       { leave_me_id: leave_me_id },
@@ -317,7 +283,6 @@ export const getInvitesSentList = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
 
     const user = (await collection.findOne(
       { leave_me_id: leave_me_id },
@@ -341,7 +306,6 @@ export const getInvitesGotList = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
 
     const user = (await collection.findOne(
       { leave_me_id: leave_me_id },
