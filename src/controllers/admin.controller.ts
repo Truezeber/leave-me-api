@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
+import { transformer } from "../utils/transformers.utils";
 
 import * as adminService from "../services/admin.service";
 
@@ -9,12 +10,9 @@ export const banUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/admin/ban-user - Banning user");
+    logger.info("POST /api/v1/admin/ban-user - Banning user");
 
-    const [userLid, secondUserLid] = [
-      (req as any).user,
-      req.body.ban_lid
-    ];
+    const [userLid, secondUserLid] = transformer.stringify((req as any).user, req.body.ban_lid);
 
     await adminService.banUser(userLid, secondUserLid);
 
@@ -37,12 +35,9 @@ export const unbanUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/admin/unban-user - Unbanning user");
+    logger.info("POST /api/v1/admin/unban-user - Unbanning user");
 
-    const [userLid, secondUserLid] = [
-      (req as any).user,
-      req.body.ban_lid
-    ];
+    const [userLid, secondUserLid] = transformer.stringify((req as any).user, req.body.ban_lid);
 
     await adminService.unbanUser(userLid, secondUserLid);
 
@@ -67,18 +62,16 @@ export const deletePost = async (
   try {
     logger.info("POST /api/v1/admin/delete-post - Deleting a post");
 
-    let [userLid, origin] = [
-      (req as any).user,
-      req.body.origin,
-    ];
+    const [userLid, origin] = transformer.stringify((req as any).user, req.body.origin);
+    let originId: ObjectId;
 
-    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
-      origin = new ObjectId(origin);
+    if (origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
+      originId = new ObjectId(origin);
     } else {
       throw { message: "Origin is not a valid ObjectId", statusCode: 400 }
     }
 
-    await adminService.deletePost(userLid, origin);
+    await adminService.deletePost(userLid, originId);
 
     res
       .status(200)
@@ -99,13 +92,9 @@ export const grantBadge = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/admin/grant-badge - Granting a badge to a user");
+    logger.info("POST /api/v1/admin/grant-badge - Granting a badge to a user");
 
-    const [userLid, secondUserLid, badge] = [
-      (req as any).user,
-      req.body.user_lid,
-      req.body.badge
-    ];
+    const [userLid, secondUserLid, badge] = transformer.stringify((req as any).user, req.body.user_lid, req.body.badge);
 
     await adminService.grantBadge(userLid, secondUserLid, badge);
 
@@ -128,13 +117,9 @@ export const revokeBadge = async (
   res: Response
 ): Promise<void> => {
   try {
-    logger.info("POST /api/admin/revoke-badge - Revoking a badge to a user");
+    logger.info("POST /api/v1/admin/revoke-badge - Revoking a badge to a user");
 
-    const [userLid, secondUserLid, badge] = [
-      (req as any).user,
-      req.body.user_lid,
-      req.body.badge
-    ];
+    const [userLid, secondUserLid, badge] = transformer.stringify((req as any).user, req.body.user_lid, req.body.badge);
 
     await adminService.revokeBadge(userLid, secondUserLid, badge);
 
