@@ -15,23 +15,14 @@ export const loginUser = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
 
     const user: User = (await collection.findOne({
       leave_me_id: leave_me_id,
     })) as User;
-    logger.info("User:", user);
 
-    logger.debug("password: ", password);
-    const hashedPassword = await auth.hashPassword(password);
-    logger.debug("Hashed password:", hashedPassword);
     let response: string[] = ["", ""];
 
-    if (
-      user &&
-      (await auth.comparePassword(password, user.password)) === true
-    ) {
-      logger.success("All good");
+    if (user && await auth.comparePassword(password, user.password) === true) {
       response[1] = auth.generateJwt({ leave_me_id: leave_me_id });
 
       if (remember_me) {
@@ -42,7 +33,6 @@ export const loginUser = async (
         );
       }
     } else {
-      logger.warn("Wrong password");
       throw { message: "Invalid credentials", statusCode: 401 };
     }
     return response;
