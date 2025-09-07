@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
+import { transformer } from "../utils/transformers.utils";
 
 import * as settingsService from "../services/settings.service"
 
@@ -10,10 +11,7 @@ export const changeAvatar = async (
   try {
     logger.info("POST /api/v1/settings/change-avatar - Changing avatar");
 
-    const [userLid, avatarUrl] = [
-      (req as any).user,
-      req.body.avatar_url
-    ];
+    const [userLid, avatarUrl] = transformer.toString((req as any).user, req.body.avatar_url);
 
     await settingsService.changeAvatar(userLid, avatarUrl);
 
@@ -38,10 +36,7 @@ export const changeBackground = async (
   try {
     logger.info("POST /api/v1/settings/change-background - Changing background");
 
-    const [userLid, backgroundUrl] = [
-      (req as any).user,
-      req.body.background_url
-    ];
+    const [userLid, backgroundUrl] = transformer.toString((req as any).user, req.body.background_url);
 
     await settingsService.changeBackground(userLid, backgroundUrl);
 
@@ -66,10 +61,7 @@ export const changeNickname = async (
   try {
     logger.info("POST /api/v1/settings/change-nickname - Changing nickname");
 
-    const [userLid, nickname] = [
-      (req as any).user,
-      req.body.nickname
-    ];
+    const [userLid, nickname] = transformer.toString((req as any).user, req.body.nickname);
 
     await settingsService.changeNickname(userLid, nickname);
 
@@ -94,10 +86,7 @@ export const changeStatus = async (
   try {
     logger.info("POST /api/v1/settings/change-status - Changing status");
 
-    const [userLid, status] = [
-      (req as any).user,
-      req.body.status
-    ];
+    const [userLid, status] = transformer.toString((req as any).user, req.body.status);
 
     await settingsService.changeStatus(userLid, status);
 
@@ -123,11 +112,7 @@ export const changePassword = async (
   try {
     logger.info("POST /api/v1/settings/change-password - Changing password");
 
-    const [userLid, password, newPassword] = [
-      (req as any).user,
-      req.body.password,
-      req.body.new_password
-    ];
+    const [userLid, password, newPassword] = transformer.toString((req as any).user, req.body.password, req.body.new_password);
 
     await settingsService.changePassword(userLid, password, newPassword);
 
