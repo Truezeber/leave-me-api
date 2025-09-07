@@ -110,13 +110,14 @@ export const message = async (
     }
 
     const usersCollection = mainDb.collection<User>("users");
-    const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
-    let checkedComment = false;
-
     const ticketsCollection = mainDb.collection<Ticket>("tickets");
+    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+
+    const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
     const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
 
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    let checkedComment = false;
+
 
     if (!ticket) {
       throw { message: "Ticket not found", statusCode: 404 };
@@ -125,7 +126,7 @@ export const message = async (
     if (user.is_admin) {
       checkedComment = is_comment;
     } else if (ticket.closed) {
-      throw { message: "Ticket is closed", statusCode: 403 };
+      throw { message: "Ticket is closed or you're not a part of it", statusCode: 403 };
     }
 
     const isParticipant = ticket.participants.includes(leave_me_id);
@@ -134,7 +135,7 @@ export const message = async (
       if (user.is_admin) {
         await ticketsCollection.updateOne({ ticketId: ticket_id }, { $push: { participants: leave_me_id } });
       } else {
-        throw { message: "You're not a part of this conversation", statusCode: 403 };
+        throw { message: "Ticket is closed or you're not a part of it", statusCode: 403 };
       }
     }
 
@@ -186,19 +187,19 @@ export const loadTicket = async (
     }
 
     const ticketsCollection = mainDb.collection<Ticket>("tickets");
+    const usersCollection = mainDb.collection<User>("users");
+
+    const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
     const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
 
     if (!ticket) {
-      throw { message: "Ticket not found", statusCode: 404 };
+      throw { message: "Ticket not found or you're not a part of it", statusCode: 404 };
     }
-
-    const usersCollection = mainDb.collection<User>("users");
-    const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
 
     const isParticipant = ticket.participants.includes(leave_me_id);
 
     if (!user.is_admin && !isParticipant) {
-      throw { message: "You're not a part of this conversation", statusCode: 403 };
+      throw { message: "Ticket not found or you're not a part of it", statusCode: 403 };
     }
 
     return ticket;
