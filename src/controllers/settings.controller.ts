@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
 import { transformer } from "../utils/transformers.utils";
+import { validator } from "../utils/validators.utils";
 
 import * as settingsService from "../services/settings.service"
 
@@ -12,6 +13,10 @@ export const changeAvatar = async (
     logger.info("POST /api/v1/settings/change-avatar - Changing avatar");
 
     const [userLid, avatarUrl] = transformer.toString((req as any).user, req.body.avatar_url);
+
+    if (!validator.url(avatarUrl)) {
+      throw { message: "Invalid url", statusCode: 400 };
+    }
 
     await settingsService.changeAvatar(userLid, avatarUrl);
 
@@ -38,6 +43,10 @@ export const changeBackground = async (
 
     const [userLid, backgroundUrl] = transformer.toString((req as any).user, req.body.background_url);
 
+    if (!validator.url(backgroundUrl)) {
+      throw { message: "Invalid url", statusCode: 400 };
+    }
+
     await settingsService.changeBackground(userLid, backgroundUrl);
 
     res
@@ -62,6 +71,10 @@ export const changeNickname = async (
     logger.info("POST /api/v1/settings/change-nickname - Changing nickname");
 
     const [userLid, nickname] = transformer.toString((req as any).user, req.body.nickname);
+
+    if (!validator.nickname(nickname)) {
+      throw { message: "Invalid nickname", statusCode: 400 };
+    }
 
     await settingsService.changeNickname(userLid, nickname);
 
@@ -88,6 +101,10 @@ export const changeStatus = async (
 
     const [userLid, status] = transformer.toString((req as any).user, req.body.status);
 
+    if (status.length > 120) {
+      throw { message: "Status is too long", statusCode: 400 };
+    }
+
     await settingsService.changeStatus(userLid, status);
 
     res
@@ -113,6 +130,10 @@ export const changePassword = async (
     logger.info("POST /api/v1/settings/change-password - Changing password");
 
     const [userLid, password, newPassword] = transformer.toString((req as any).user, req.body.password, req.body.new_password);
+
+    if (!validator.password(newPassword)) {
+      throw { message: "Invalid nickname", statusCode: 400 };
+    }
 
     await settingsService.changePassword(userLid, password, newPassword);
 

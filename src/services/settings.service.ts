@@ -1,7 +1,6 @@
 import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { logger } from "../utils/logger.utils";
-import { validator } from "../utils/validators.utils";
 import { auth } from "../utils/auth.utils";
 
 export const changeAvatar = async (
@@ -15,12 +14,6 @@ export const changeAvatar = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    if (!validator.url(avatarUrl)) {
-      logger.warn("Invalid avatar url");
-      throw { message: "Invalid avatar url", statusCode: 400 };
-    }
 
     await collection.updateOne(
       { leave_me_id: leave_me_id },
@@ -45,12 +38,6 @@ export const changeNickname = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    if (!validator.nickname(nickname)) {
-      logger.warn("Invalid nickname");
-      throw { message: "Invalid nickname", statusCode: 400 };
-    }
 
     await collection.updateOne(
       { leave_me_id: leave_me_id },
@@ -77,29 +64,18 @@ export const changePassword = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    if (!validator.password(newPassword)) {
-      logger.warn("Invalid password");
-      throw { message: "Invalid password", statusCode: 400 };
-    }
 
     const user: User = (await collection.findOne({
       leave_me_id: leave_me_id,
     })) as User;
-    logger.info("User:", user);
 
-    if (
-      user &&
-      (await auth.comparePassword(previousPassword, user.password)) === true
-    ) {
+    if (user && await auth.comparePassword(previousPassword, user.password) === true) {
       const hashedPassword = await auth.hashPassword(newPassword);
       await collection.updateOne(
         { leave_me_id: leave_me_id },
         { $set: { password: hashedPassword } }
       );
     } else {
-      logger.warn("Wrong password");
       throw { message: "Invalid credentials", statusCode: 401 };
     }
 
@@ -121,10 +97,6 @@ export const changeBackground = async (
     }
 
     const collection = mainDb.collection<User>("users");
-
-    if (!validator.url(url)) {
-      throw { message: "Invalid URL", statusCode: 400 };
-    }
 
     await collection.updateOne(
       { leave_me_id: leave_me_id },
@@ -149,10 +121,6 @@ export const changeStatus = async (
     }
 
     const collection = mainDb.collection<User>("users");
-
-    if (status.length > 120) {
-      throw { message: "Status is too long", statusCode: 400 };
-    }
 
     await collection.updateOne(
       { leave_me_id: leave_me_id },
