@@ -1,26 +1,16 @@
 import { z } from "zod/v4";
-import { fromError } from "zod-validation-error/v4";
-import { logger } from "./logger.utils";
 
 export const validator = {
   email: (email: string) => {
-    logger.info(`Validating email: `, email);
-
     const schema = z.email({ error: "Not an email!" });
 
     try {
       schema.parse(email);
-      logger.success(`Email is valid: `, email);
+
       return true;
-    } catch (error) {
-      const validationError = fromError(error);
-      logger.error(validationError.toString(), email);
-      return false;
-    }
+    } catch (error) { return false };
   },
   leaveMeId: (id: string) => {
-    logger.info(`Validating LeaveMeId: `, id);
-
     const schema = z
       .string({ error: "Not a string!" })
       .min(4, { error: "Too short!" })
@@ -29,34 +19,22 @@ export const validator = {
 
     try {
       schema.parse(id);
-      logger.success(`LeaveMeId is valid: `, id);
+
       return true;
-    } catch (error) {
-      const validationError = fromError(error);
-      logger.error(validationError.toString(), id);
-      return false;
-    }
+    } catch (error) { return false };
   },
   password: (password: string) => {
-    logger.info(`Validating password: `, password);
-
     const schema = z
       .string({ error: "Not a string!" })
       .min(6, { error: "Too short!" });
 
     try {
       schema.parse(password);
-      logger.success(`Password is valid: `, password);
+
       return true;
-    } catch (error) {
-      const validationError = fromError(error);
-      logger.error(validationError.toString(), password);
-      return false;
-    }
+    } catch (error) { return false };
   },
   nickname: (nickname: string) => {
-    logger.info(`Validating nickname: `, nickname);
-
     const schema = z
       .string({ error: "Not a string!" })
       .min(3, { error: "Too short!" })
@@ -64,27 +42,17 @@ export const validator = {
 
     try {
       schema.parse(nickname);
-      logger.success(`Nickname is valid: `, nickname);
+
       return true;
-    } catch (error) {
-      const validationError = fromError(error);
-      logger.error(validationError.toString(), nickname);
-      return false;
-    }
+    } catch (error) { return false };
   },
   url: (url: string) => {
-    logger.info(`Validating url: `, url);
-
     const schema = z.url({ error: "Not a valid URL!" });
 
     try {
       schema.parse(url);
-      logger.success(`URL is valid: `, url);
+
       return true;
-    } catch (error) {
-      const validationError = fromError(error);
-      logger.error(validationError.toString(), url);
-      return false;
-    }
+    } catch (error) { return false };
   },
 };
