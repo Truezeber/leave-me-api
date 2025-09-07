@@ -5,5 +5,9 @@ export const transformer = {
 
   toInt: (...args: any[]): number[] => {
     return args.map(x => parseInt(x));
+  },
+
+  toBoolean: (...args: any[]): boolean[] => {
+    return args.map(x => Boolean(x));
   }
 } 
