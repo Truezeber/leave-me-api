@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
+import { transformer } from "../utils/transformers.utils";
 
 import * as postsService from "../services/posts.service";
 
@@ -11,15 +12,15 @@ export const sendPost = async (
   try {
     logger.info("POST /api/v1/posts/send - Sending a post");
 
-    let [userLid, origin, content] = [
-      (req as any).user,
-      req.body.origin,
-      req.body.content
-    ];
+    const [userLid, originString, content] = transformer.toString((req as any).user, req.body.origin, req.body.content);
+    let origin: ObjectId | string;
 
-    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
-      origin = new ObjectId(origin);
+    if (originString.length === 24 && /^[a-f0-9]+$/i.test(originString)) {
+      origin = new ObjectId(originString);
+    } else {
+      origin = originString;
     }
+
     const response = await postsService.createPost(userLid, origin, content);
 
     res
@@ -41,18 +42,16 @@ export const deletePost = async (
   try {
     logger.info("POST /api/v1/posts/delete - Deleting a post");
 
-    let [userLid, origin] = [
-      (req as any).user,
-      req.body.origin,
-    ];
+    const [userLid, originString] = transformer.toString((req as any).user, req.body.origin);
+    let originId: ObjectId;
 
-    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
-      origin = new ObjectId(origin);
+    if (originString.length === 24 && /^[a-f0-9]+$/i.test(originString)) {
+      originId = new ObjectId(originString);
     } else {
       throw { message: "Origin is not a valid ObjectId", statusCode: 400 }
     }
 
-    const response = await postsService.deletePost(userLid, origin);
+    const response = await postsService.deletePost(userLid, originId);
 
     res
       .status(200)
@@ -73,18 +72,16 @@ export const likePost = async (
   try {
     logger.info("POST /api/v1/posts/like - Liking a post");
 
-    let [userLid, origin] = [
-      (req as any).user,
-      req.body.origin,
-    ];
+    const [userLid, originString] = transformer.toString((req as any).user, req.body.origin);
+    let originId: ObjectId;
 
-    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
-      origin = new ObjectId(origin);
+    if (originString.length === 24 && /^[a-f0-9]+$/i.test(originString)) {
+      originId = new ObjectId(originString);
     } else {
       throw { message: "Origin is not a valid ObjectId", statusCode: 400 }
     }
 
-    const response = await postsService.likePost(userLid, origin);
+    const response = await postsService.likePost(userLid, originId);
 
     res
       .status(200)
@@ -105,18 +102,16 @@ export const unlikePost = async (
   try {
     logger.info("POST /api/v1/posts/unlike - Unliking a post");
 
-    let [userLid, origin] = [
-      (req as any).user,
-      req.body.origin,
-    ];
+    const [userLid, originString] = transformer.toString((req as any).user, req.body.origin);
+    let originId: ObjectId;
 
-    if (typeof origin === "string" && origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
-      origin = new ObjectId(origin);
+    if (originString.length === 24 && /^[a-f0-9]+$/i.test(originString)) {
+      originId = new ObjectId(originString);
     } else {
       throw { message: "Origin is not a valid ObjectId", statusCode: 400 }
     }
 
-    const response = await postsService.unlikePost(userLid, origin);
+    const response = await postsService.unlikePost(userLid, originId);
 
     res
       .status(200)
@@ -137,27 +132,21 @@ export const loadPosts = async (
   try {
     logger.info("GET /api/v1/posts/load - Loading posts");
 
-    let [userLid, originRaw, amountRaw, sortByRaw] = [
-      (req as any).user,
-      req.query.origin as string,
-      req.query.amount as string,
-      req.query.sort_by as string
-    ];
+    const [userLid, originString, sortByRaw] = transformer.toString((req as any).user, req.query.origin, req.query.sort_by);
+    const [amount] = transformer.toInt(req.query.amount);
+    let origin: ObjectId | string, sortBy: "date" | "likes";
 
-    // ObjectId check
-    let origin: ObjectId | string = originRaw;
-    if (/^[a-f0-9]{24}$/i.test(originRaw)) {
-      origin = new ObjectId(originRaw);
+    if (originString.length === 24 && /^[a-f0-9]+$/i.test(originString)) {
+      origin = new ObjectId(originString);
+    } else {
+      origin = originString;
     }
 
-    // amount
-    const amount = Number(amountRaw);
     if (isNaN(amount) || amount <= 0) {
       throw { message: "Invalid amount", statusCode: 400 };
     }
 
-    // sortBy
-    const sortBy = sortByRaw === "likes" ? "likes" : "date";
+    sortBy = sortByRaw === "likes" ? "likes" : "date";
 
     const response = await postsService.loadPosts(userLid, origin, amount, sortBy);
 
