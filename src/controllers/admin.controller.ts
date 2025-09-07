@@ -12,7 +12,7 @@ export const banUser = async (
   try {
     logger.info("POST /api/v1/admin/ban-user - Banning user");
 
-    const [userLid, secondUserLid] = transformer.stringify((req as any).user, req.body.ban_lid);
+    const [userLid, secondUserLid] = transformer.toString((req as any).user, req.body.ban_lid);
 
     await adminService.banUser(userLid, secondUserLid);
 
@@ -37,7 +37,7 @@ export const unbanUser = async (
   try {
     logger.info("POST /api/v1/admin/unban-user - Unbanning user");
 
-    const [userLid, secondUserLid] = transformer.stringify((req as any).user, req.body.ban_lid);
+    const [userLid, secondUserLid] = transformer.toString((req as any).user, req.body.ban_lid);
 
     await adminService.unbanUser(userLid, secondUserLid);
 
@@ -62,7 +62,7 @@ export const deletePost = async (
   try {
     logger.info("POST /api/v1/admin/delete-post - Deleting a post");
 
-    const [userLid, origin] = transformer.stringify((req as any).user, req.body.origin);
+    const [userLid, origin] = transformer.toString((req as any).user, req.body.origin);
     let originId: ObjectId;
 
     if (origin.length === 24 && /^[a-f0-9]+$/i.test(origin)) {
@@ -94,7 +94,7 @@ export const grantBadge = async (
   try {
     logger.info("POST /api/v1/admin/grant-badge - Granting a badge to a user");
 
-    const [userLid, secondUserLid, badge] = transformer.stringify((req as any).user, req.body.user_lid, req.body.badge);
+    const [userLid, secondUserLid, badge] = transformer.toString((req as any).user, req.body.user_lid, req.body.badge);
 
     await adminService.grantBadge(userLid, secondUserLid, badge);
 
@@ -119,7 +119,7 @@ export const revokeBadge = async (
   try {
     logger.info("POST /api/v1/admin/revoke-badge - Revoking a badge to a user");
 
-    const [userLid, secondUserLid, badge] = transformer.stringify((req as any).user, req.body.user_lid, req.body.badge);
+    const [userLid, secondUserLid, badge] = transformer.toString((req as any).user, req.body.user_lid, req.body.badge);
 
     await adminService.revokeBadge(userLid, secondUserLid, badge);
 
