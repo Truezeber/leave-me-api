@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
+import { transformer } from "../utils/transformers.utils";
 
 import * as verifyService from "../services/verify.service";
 
@@ -10,7 +11,9 @@ export const requestSignup = async (
   try {
     logger.info("POST /api/v1/auth/request-signup - Sending confirmation e-mail");
 
-    await verifyService.requestSignup(req.body.email);
+    const [email] = transformer.toString(req.body.email);
+
+    await verifyService.requestSignup(email);
 
     res
       .status(200)
@@ -33,7 +36,9 @@ export const requestNewPin = async (
   try {
     logger.info("POST /api/v1/auth/request-new-pin - Sending new PIN e-mail");
 
-    await verifyService.requestNewPin(req.body.email);
+    const [email] = transformer.toString(req.body.email);
+
+    await verifyService.requestNewPin(email);
 
     res
       .status(200)
@@ -56,7 +61,9 @@ export const confirmPin = async (
   try {
     logger.info("POST /api/v1/auth/request-verify - Verifying PIN");
 
-    await verifyService.confirmPin(req.body.email, req.body.pin);
+    const [email, pin] = transformer.toString(req.body.email, req.body.pin);
+
+    await verifyService.confirmPin(email, pin);
 
     res
       .status(200)
