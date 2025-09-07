@@ -13,12 +13,6 @@ export const logoutUser = async (
     }
 
     const collection = mainDb.collection<User>("users");
-    logger.info("Mongo collection", collection);
-
-    const user: User = (await collection.findOne({
-      leave_me_id: leave_me_id,
-    })) as User;
-    logger.info("User:", user);
 
     await collection.updateOne(
       { leave_me_id: leave_me_id },
