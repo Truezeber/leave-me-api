@@ -195,7 +195,7 @@ export const likePost = async (
 
     return "Success";
   } catch (error) {
-    logger.error("Error likeing the post:", error);
+    logger.error("Error liking the post:", error);
     throw error;
   }
 };
@@ -229,7 +229,7 @@ export const unlikePost = async (
 
     return "Success";
   } catch (error) {
-    logger.error("Error unlikeing the post:", error);
+    logger.error("Error unliking the post:", error);
     throw error;
   }
 };
