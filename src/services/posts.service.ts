@@ -1,11 +1,11 @@
-import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { Post } from "../models/posts.models";
 import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
 import { ObjectId, Sort } from "mongodb";
-import { Notifier, Notification } from "../models/notifications.model";
+import { Notification } from "../models/notifications.model";
 import { sendNotification } from "../sockets";
+import { dbFunctions, dbCollections } from "../utils/db.utils";
 
 export const createPost = async (
   leave_me_id: string,
@@ -13,14 +13,11 @@ export const createPost = async (
   content: string
 ): Promise<Post> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const userCollection = mainDb.collection<User>("users");
-    const postsCollection = mainDb.collection<Post>("posts");
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    const userCollection = dbCollections.users;
+    const postsCollection = dbCollections.posts;
+    const notificationsCollection = dbCollections.notifications;
 
     if (origin instanceof ObjectId) {
       const originPost: Post = (await postsCollection.findOne({ _id: origin })) as Post;
@@ -101,12 +98,9 @@ export const deletePost = async (
   post_id: ObjectId
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const postsCollection = mainDb.collection<Post>("posts");
+    const postsCollection = dbCollections.posts;
 
     const post: Post = (await postsCollection.findOne({ _id: post_id })) as Post;
 
@@ -139,13 +133,10 @@ export const likePost = async (
   post_id: ObjectId
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const postsCollection = mainDb.collection<Post>("posts");
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    const postsCollection = dbCollections.posts;
+    const notificationsCollection = dbCollections.notifications;
 
     const post: Post = (await postsCollection.findOne({ _id: post_id })) as Post;
 
@@ -205,12 +196,9 @@ export const unlikePost = async (
   post_id: ObjectId
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const postsCollection = mainDb.collection<Post>("posts");
+    const postsCollection = dbCollections.posts;
 
     const post: Post = (await postsCollection.findOne({ _id: post_id })) as Post;
 
@@ -241,10 +229,7 @@ export const loadPosts = async (
   sort_by: "date" | "likes"
 ): Promise<Post[]> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
     if (!(origin instanceof ObjectId)) {
       if (origin !== leave_me_id) {
@@ -256,7 +241,7 @@ export const loadPosts = async (
       }
     }
 
-    const postsCollection = mainDb.collection<Post>("posts");
+    const postsCollection = dbCollections.posts;
 
     const sort: Sort = sort_by === "likes" ? { likes: -1 } : { createTime: -1 };
     const posts = await postsCollection
