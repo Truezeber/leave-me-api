@@ -48,9 +48,9 @@ export const acceptFriend = async (
 
   } catch (error: any) {
     const status = error.statusCode || 500;
-    res.status(status.json({
+    res.status(status).json({
       error: error.message || "Something went wrong",
-    }))
+    })
   }
 }
 
@@ -73,9 +73,9 @@ export const rejectFriend = async (
 
   } catch (error: any) {
     const status = error.statusCode || 500;
-    res.status(status.json({
+    res.status(status).json({
       error: error.message || "Something went wrong",
-    }))
+    })
   }
 }
 
@@ -98,9 +98,9 @@ export const cancelInvite = async (
 
   } catch (error: any) {
     const status = error.statusCode || 500;
-    res.status(status.json({
+    res.status(status).json({
       error: error.message || "Something went wrong",
-    }))
+    })
   }
 }
 
@@ -123,9 +123,9 @@ export const deleteFriend = async (
 
   } catch (error: any) {
     const status = error.statusCode || 500;
-    res.status(status.json({
+    res.status(status).json({
       error: error.message || "Something went wrong",
-    }))
+    })
   }
 }
 
@@ -148,9 +148,9 @@ export const getFriendsList = async (
 
   } catch (error: any) {
     const status = error.statusCode || 500;
-    res.status(status.json({
+    res.status(status).json({
       error: error.message || "Something went wrong",
-    }))
+    })
   }
 }
 
@@ -173,9 +173,9 @@ export const getInvitesSentList = async (
 
   } catch (error: any) {
     const status = error.statusCode || 500;
-    res.status(status.json({
+    res.status(status).json({
       error: error.message || "Something went wrong",
-    }))
+    })
   }
 }
 
@@ -198,8 +198,8 @@ export const getInvitesGotList = async (
 
   } catch (error: any) {
     const status = error.statusCode || 500;
-    res.status(status.json({
+    res.status(status).json({
       error: error.message || "Something went wrong",
-    }))
+    })
   }
 }
