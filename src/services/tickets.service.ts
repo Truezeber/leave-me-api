@@ -1,12 +1,11 @@
-import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
-import { Post } from "../models/posts.models";
 import { Ticket, TicketCategory, TicketMessage } from "../models/tickets.model";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
 import { randomInt } from "crypto";
-import { Notifier, Notification } from "../models/notifications.model";
+import { Notification } from "../models/notifications.model";
 import { sendNotification } from "../sockets";
+import { dbFunctions, dbCollections } from "../utils/db.utils";
 
 export const createTicket = async (
   leave_me_id: string,
@@ -15,14 +14,11 @@ export const createTicket = async (
   reported_post?: ObjectId
 ): Promise<Ticket> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const userCollection = mainDb.collection<User>("users");
-    const postsCollection = mainDb.collection<Post>("posts");
-    const ticketsCollection = mainDb.collection<Ticket>("tickets");
+    const userCollection = dbCollections.users;
+    const postsCollection = dbCollections.posts;
+    const ticketsCollection = dbCollections.tickets;
 
     if (reported_user) {
       const user = await userCollection.findOne({ leave_me_id: reported_user });
@@ -68,13 +64,10 @@ export const closeTicket = async (
   ticket_id: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const usersCollection = mainDb.collection<User>("users");
-    const ticketsCollection = mainDb.collection<Ticket>("tickets");
+    const usersCollection = dbCollections.users;
+    const ticketsCollection = dbCollections.tickets;
 
     const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
 
@@ -104,14 +97,11 @@ export const message = async (
   is_comment: boolean
 ): Promise<TicketMessage> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const usersCollection = mainDb.collection<User>("users");
-    const ticketsCollection = mainDb.collection<Ticket>("tickets");
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    const usersCollection = dbCollections.users;
+    const ticketsCollection = dbCollections.tickets;
+    const notificationsCollection = dbCollections.notifications;
 
     const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
     const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
@@ -181,13 +171,10 @@ export const loadTicket = async (
   ticket_id: string
 ): Promise<Ticket> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const ticketsCollection = mainDb.collection<Ticket>("tickets");
-    const usersCollection = mainDb.collection<User>("users");
+    const ticketsCollection = dbCollections.tickets;
+    const usersCollection = dbCollections.users;
 
     const user = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
     const ticket = await ticketsCollection.findOne({ ticketId: ticket_id });
@@ -215,13 +202,10 @@ export const loadTickets = async (
   sort_by: "newest" | "oldest"
 ): Promise<Ticket[]> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const ticketsCollection = mainDb.collection<Ticket>("tickets");
-    const usersCollection = mainDb.collection<User>("users");
+    const ticketsCollection = dbCollections.tickets;
+    const usersCollection = dbCollections.users;
 
     const user = await usersCollection.findOne({ leave_me_id }) as User;
 
