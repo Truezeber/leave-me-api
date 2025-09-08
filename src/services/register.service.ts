@@ -1,19 +1,16 @@
-import { client, mainDb } from "../config/database.config";
-import { User, UserConfirmation, UserRegister } from "../models/user.model";
+import { User, UserRegister } from "../models/user.model";
 import { auth } from "../utils/auth.utils";
 import { logger } from "../utils/logger.utils";
 import { Notifier } from "../models/notifications.model";
+import { dbFunctions, dbCollections } from "../utils/db.utils";
 
 export const registerUser = async (user: UserRegister): Promise<string[]> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
-    const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    const collection = dbCollections.users;
+    const confirmationCollection = dbCollections.confirmations;
+    const notificationsCollection = dbCollections.notifications;
 
     const confirmedUser = await confirmationCollection.findOne({ email: user.email });
 
