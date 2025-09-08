@@ -1,7 +1,6 @@
 
 import { Socket } from "socket.io";
 import { parse } from "cookie";
-import { logger } from "./utils/logger.utils";
 import { auth } from "./utils/auth.utils";
 import { io } from "./index";
 
@@ -34,21 +33,18 @@ export const initSockets = () => {
     const leave_me_id = socket.data.leave_me_id;
 
     if (!leave_me_id) {
-      logger.warn("! Socket conneted without leave me id !");
       socket.disconnect();
       return;
     }
 
     socket.join(leave_me_id);
-    logger.info("User connected and room created:", leave_me_id);
 
     socket.on("disconnect", () => {
-      logger.info("User disconnected", leave_me_id);
+      //
     });
   });
 };
 
 export const sendNotification = (leave_me_id: string, notification: any): void => {
-  logger.info(`Function call leave_me_id: ${leave_me_id} | notification: ${notification}`);
   io.to(leave_me_id).emit("notification", notification);
 }
