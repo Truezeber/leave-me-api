@@ -1,23 +1,20 @@
-import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { Post } from "../models/posts.models";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
-import { Notifier, Notification } from "../models/notifications.model";
+import { Notification } from "../models/notifications.model";
 import { sendNotification } from "../sockets";
+import { dbCollections, dbFunctions } from "../utils/db.utils";
 
 export const banUser = async (
   leave_me_id: string,
   target_id: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const usersCollection = mainDb.collection<User>("users");
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    const usersCollection = dbCollections.users;
+    const notificationsCollection = dbCollections.notifications;
 
     const adminUser = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
 
@@ -62,12 +59,9 @@ export const unbanUser = async (
   target_id: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck()
 
-    const usersCollection = mainDb.collection<User>("users");
+    const usersCollection = dbCollections.users;
 
     const adminUser = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
 
@@ -98,13 +92,10 @@ export const deletePost = async (
   post_id: ObjectId
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const usersCollection = mainDb.collection<User>("users");
-    const postsCollection = mainDb.collection<Post>("posts");
+    const usersCollection = dbCollections.users;
+    const postsCollection = dbCollections.posts;
 
     const adminUser = await usersCollection.findOne({ leave_me_id: leave_me_id }) as User;
 
@@ -132,12 +123,9 @@ export const grantBadge = async (
   badge: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not availabel", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const usersColection = mainDb.collection<User>("users");
+    const usersColection = dbCollections.users;
 
     const adminUser = await usersColection.findOne({ leave_me_id: leave_me_id }) as User;
 
@@ -169,12 +157,9 @@ export const revokeBadge = async (
   badge: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not availabel", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const usersColection = mainDb.collection<User>("users");
+    const usersColection = dbCollections.users;
 
     const adminUser = await usersColection.findOne({ leave_me_id: leave_me_id }) as User;
 
