@@ -40,7 +40,7 @@ export const banUser = async (
       notification_user: target_id,
       clickable_content: "url",
       content: "You can ask for unban.",
-      createdAt: new Date(),
+      created_at: new Date(),
       isSeen: false
     }
 

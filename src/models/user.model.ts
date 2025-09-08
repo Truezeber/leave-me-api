@@ -60,6 +60,6 @@ export interface UserConfirmation {
   _id?: ObjectId;
   email: string;
   pin: string;
-  expiresAt: Date;
+  expires_at: Date;
   verified: boolean;
 }

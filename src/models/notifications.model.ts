@@ -6,7 +6,7 @@ export interface Notification {
   notification_user: string;
   clickable_content: string | ObjectId;
   content: string;
-  createdAt: Date;
+  created_at: Date;
   isSeen: boolean;
 }
 

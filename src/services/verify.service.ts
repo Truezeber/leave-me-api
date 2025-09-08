@@ -19,7 +19,7 @@ export const requestSignup = async (userEmail: string): Promise<string> => {
     const newConfirmation: UserConfirmation = {
       email: userEmail,
       pin: await auth.hashPassword(pin),
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      expires_at: new Date(Date.now() + 10 * 60 * 1000),
       verified: false
     };
 
@@ -60,7 +60,7 @@ export const requestNewPin = async (userEmail: string): Promise<string> => {
       throw { message: "Email not registered yet", statusCode: 404 };
     }
 
-    if (Date.now() < user.expiresAt.getTime()) {
+    if (Date.now() < user.expires_at.getTime()) {
       throw { message: "Old PIN still valid", statusCode: 409 };
     }
 
@@ -68,7 +68,7 @@ export const requestNewPin = async (userEmail: string): Promise<string> => {
     const newConfirmation: UserConfirmation = {
       email: userEmail,
       pin: await auth.hashPassword(pin),
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      expires_at: new Date(Date.now() + 10 * 60 * 1000),
       verified: false
     };
 
@@ -108,7 +108,7 @@ export const confirmPin = async (userEmail: string, confirmPin: string): Promise
       throw { message: "User already verified", statusCode: 409 };
     }
 
-    if (Date.now() > user.expiresAt.getTime() || !await auth.comparePassword(confirmPin, user.pin)) {
+    if (Date.now() > user.expires_at.getTime() || !await auth.comparePassword(confirmPin, user.pin)) {
       throw { message: "PIN is invalid or outdated", statusCode: 409 };
     }
 

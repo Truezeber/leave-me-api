@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 export interface Post {
   _id?: ObjectId;
   author: string;
-  createTime: Date;
+  created_at: Date;
   origin: ObjectId | string;
   content: string;
   likes: string[];

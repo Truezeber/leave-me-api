@@ -39,7 +39,7 @@ export const loadNotifications = async (
 
     const notifier = await notifiersCollection.findOne({ leave_me_id: leave_me_id }) as Notifier;
 
-    const notifications = notifier.notifications.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, amount);
+    const notifications = notifier.notifications.sort((a, b) => b.created_at.getTime() - a.created_at.getTime()).slice(0, amount);
 
     return notifications;
   } catch (error) {

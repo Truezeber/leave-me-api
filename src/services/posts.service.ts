@@ -55,7 +55,7 @@ export const createPost = async (
     const newPost: Post = {
       _id: new ObjectId(),
       author: leave_me_id,
-      createTime: new Date(),
+      created_at: new Date(),
       origin: origin,
       content: content,
       likes: [],
@@ -77,7 +77,7 @@ export const createPost = async (
         notification_user: leave_me_id,
         clickable_content: origin,
         content: shortedContent,
-        createdAt: new Date(),
+        created_at: new Date(),
         isSeen: false
       }
 
@@ -177,7 +177,7 @@ export const likePost = async (
       notification_user: leave_me_id,
       clickable_content: post_id,
       content: shortedContent,
-      createdAt: new Date(),
+      created_at: new Date(),
       isSeen: false
     }
 

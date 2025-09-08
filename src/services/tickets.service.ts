@@ -39,13 +39,13 @@ export const createTicket = async (
     const ticketId = `#${String(randomInt(0, 10000)).padStart(4, "0")}-${String(randomInt(0, 10000)).padStart(4, "0")}`;
 
     const newTicket: Ticket = {
-      ticketId: ticketId,
+      ticket_id: ticketId,
       author: leave_me_id,
-      createTime: new Date(),
+      created_at: new Date(),
       category: category,
       participants: [leave_me_id],
-      reportedUser: reported_user,
-      reportedPost: reported_post,
+      reported_user: reported_user,
+      reported_post: reported_post,
       closed: false,
       messages: []
     };
@@ -131,9 +131,9 @@ export const message = async (
 
     const newMessage: TicketMessage = {
       author: leave_me_id,
-      createTime: new Date(),
+      created_at: new Date(),
       content: content,
-      isComment: checkedComment
+      is_comment: checkedComment
     }
 
     await ticketsCollection.updateOne({ ticketId: ticket_id }, { $push: { messages: newMessage } });
@@ -150,7 +150,7 @@ export const message = async (
           notification_user: ticketParticipant,
           clickable_content: ticket_id,
           content: shortedContent,
-          createdAt: new Date(),
+          created_at: new Date(),
           isSeen: false
         }
 

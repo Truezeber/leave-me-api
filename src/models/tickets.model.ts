@@ -5,20 +5,20 @@ export type TicketCategory = "Report post" | "Report user" | "Delete account" | 
 export interface TicketMessage {
   _id?: ObjectId;
   author: string;
-  createTime: Date;
+  created_at: Date;
   content: string;
-  isComment: boolean;
+  is_comment: boolean;
 }
 
 export interface Ticket {
   _id?: ObjectId;
-  ticketId: string;
+  ticket_id: string;
   author: string;
-  createTime: Date;
+  created_at: Date;
   category: TicketCategory;
   participants: string[];
-  reportedUser?: string;
-  reportedPost?: ObjectId;
+  reported_user?: string;
+  reported_post?: ObjectId;
   closed: boolean;
   messages?: TicketMessage[];
 }

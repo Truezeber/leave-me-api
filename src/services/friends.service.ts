@@ -65,7 +65,7 @@ export const inviteFriend = async (
       notification_user: leave_me_id,
       clickable_content: leave_me_id,
       content: "Check his profile!",
-      createdAt: new Date(),
+      created_at: new Date(),
       isSeen: false
     }
 
@@ -116,7 +116,7 @@ export const acceptFriend = async (
       notification_user: leave_me_id,
       clickable_content: leave_me_id,
       content: "Accepted your invite!",
-      createdAt: new Date(),
+      created_at: new Date(),
       isSeen: false
     }
 
