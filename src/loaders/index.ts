@@ -4,6 +4,7 @@ import { setupSwagger } from "./swagger";
 import { setupMiddlewares } from "./middlewares";
 import { setupRoutes } from "./routes";
 import { logger } from "../utils/logger.utils";
+import { config } from "../config/app.config";
 
 export const initializeApp = async (app: Application): Promise<void> => {
   try {
@@ -20,8 +21,9 @@ export const initializeApp = async (app: Application): Promise<void> => {
     );
   }
 
-  setupSwagger(app);
-
+  if (config.environment! === "production") {
+    setupSwagger(app);
+  }
   setupMiddlewares(app);
 
   setupRoutes(app);
