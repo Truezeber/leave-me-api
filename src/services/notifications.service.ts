@@ -1,19 +1,16 @@
-import { client, mainDb } from "../config/database.config";
 import { logger } from "../utils/logger.utils";
 import { ObjectId } from "mongodb";
 import { Notifier, Notification } from "../models/notifications.model";
+import { dbFunctions, dbCollections } from "../utils/db.utils";
 
 export const markAsSeen = async (
   leave_me_id: string,
   notification_id: ObjectId
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const notifiersCollection = mainDb.collection<Notifier>("notifications");
+    const notifiersCollection = dbCollections.notifications;
 
     const notifications: Notifier = await notifiersCollection.findOne({ leave_me_id: leave_me_id }) as Notifier;
     const notification = notifications.notifications.find(n => n._id?.equals(notification_id));
@@ -36,12 +33,9 @@ export const loadNotifications = async (
   amount: number,
 ): Promise<Notification[]> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const notifiersCollection = mainDb.collection<Notifier>("notifications");
+    const notifiersCollection = dbCollections.notifications;
 
     const notifier = await notifiersCollection.findOne({ leave_me_id: leave_me_id }) as Notifier;
 
