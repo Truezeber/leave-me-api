@@ -1,6 +1,6 @@
-import { client, mainDb } from "../config/database.config";
-import { ReturnUser, ReturnShortUser, User } from "../models/user.model";
+import { ReturnUser, ReturnShortUser } from "../models/user.model";
 import { logger } from "../utils/logger.utils";
+import { dbFunctions, dbCollections } from "../utils/db.utils";
 
 
 export const getUser = async (
@@ -8,12 +8,9 @@ export const getUser = async (
   target: string,
 ): Promise<ReturnUser | ReturnShortUser> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const usersCollection = mainDb.collection<User>("users");
+    const usersCollection = dbCollections.users;
 
     const user = await usersCollection.findOne({ leave_me_id: target });
 
