@@ -1,23 +1,20 @@
-import { client, mainDb } from "../config/database.config";
 import { User } from "../models/user.model";
 import { logger } from "../utils/logger.utils";
 import { relations } from "../utils/relations.utils";
-import { Notifier, Notification } from "../models/notifications.model";
+import { Notification } from "../models/notifications.model";
 import { sendNotification } from "../sockets";
 import { ObjectId } from "mongodb";
+import { dbFunctions, dbCollections } from "../utils/db.utils";
 
 export const inviteFriend = async (
   leave_me_id: string,
   friend_lid: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    const collection = dbCollections.users;
+    const notificationsCollection = dbCollections.notifications;
 
     const friend: User = (await collection.findOne({
       leave_me_id: friend_lid,
@@ -87,13 +84,10 @@ export const acceptFriend = async (
   friend_lid: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
-    const notificationsCollection = mainDb.collection<Notifier>("notifications");
+    const collection = dbCollections.users;
+    const notificationsCollection = dbCollections.notifications;
 
     const isInvited = await relations.isInvited(leave_me_id, friend_lid);
     if (!isInvited) {
@@ -141,12 +135,9 @@ export const rejectFriend = async (
   friend_lid: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
+    const collection = dbCollections.users;
 
     const isInvited = await relations.isInvited(leave_me_id, friend_lid);
     if (!isInvited) {
@@ -179,12 +170,9 @@ export const cancelInvite = async (
   friend_lid: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
+    const collection = dbCollections.users;
 
     const isInviting = await relations.isInviting(leave_me_id, friend_lid);
     if (!isInviting) {
@@ -217,12 +205,9 @@ export const deleteFriend = async (
   friend_lid: string
 ): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
+    const collection = dbCollections.users;
 
     const areFriends = await relations.areFriends(leave_me_id, friend_lid);
     if (!areFriends) {
@@ -254,12 +239,9 @@ export const getFriendsList = async (
   leave_me_id: string
 ): Promise<string[]> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
+    const collection = dbCollections.users;
 
     const user = (await collection.findOne(
       { leave_me_id: leave_me_id },
@@ -277,12 +259,9 @@ export const getInvitesSentList = async (
   leave_me_id: string
 ): Promise<string[]> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
+    const collection = dbCollections.users;
 
     const user = (await collection.findOne(
       { leave_me_id: leave_me_id },
@@ -300,12 +279,9 @@ export const getInvitesGotList = async (
   leave_me_id: string
 ): Promise<string[]> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const collection = mainDb.collection<User>("users");
+    const collection = dbCollections.users;
 
     const user = (await collection.findOne(
       { leave_me_id: leave_me_id },
