@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { logger } from "../utils/logger.utils";
 import * as logoutService from "../services/logout.service";
 import { transformer } from "../utils/transformers.utils";
+import { config } from "../config/app.config";
 
 export const logoutUser = async (
   req: Request,
@@ -18,12 +19,12 @@ export const logoutUser = async (
       .status(200)
       .clearCookie("access_token", {
         httpOnly: true,
-        //secure: true, //! <- uncomment before deploy
+        secure: config.environment === "production",
         sameSite: "strict",
       })
       .clearCookie("refresh_token", {
         httpOnly: true,
-        //secure: true, //! <- uncomment before deploy
+        secure: config.environment === "production",
         sameSite: "strict",
       })
       .json({

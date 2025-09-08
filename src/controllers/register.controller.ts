@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import * as registerService from "../services/register.service";
 import { logger } from "../utils/logger.utils";
 import { validator } from "../utils/validators.utils";
+import { config } from "../config/app.config";
 
 export const postUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -39,12 +40,12 @@ export const postUser = async (req: Request, res: Response): Promise<void> => {
       .status(200)
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        //secure: true, //! <- uncomment before deploy
+        secure: config.environment === "production",
         sameSite: true,
       })
       .cookie("access_token", accessToken, {
         httpOnly: true,
-        //secure: true, //! <- uncomment before deploy
+        secure: config.environment === "production",
         sameSite: true,
         maxAge: 1000 * 60 * 60,
       })
