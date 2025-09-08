@@ -1,18 +1,15 @@
-import { client, mainDb } from "../config/database.config";
-import { UserConfirmation, User } from "../models/user.model";
+import { UserConfirmation } from "../models/user.model";
 import { auth } from "../utils/auth.utils";
 import { logger } from "../utils/logger.utils";
 import { email } from "../utils/emails.utils";
+import { dbFunctions, dbCollections } from "../utils/db.utils";
 
 export const requestSignup = async (userEmail: string): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
-    const usersCollection = mainDb.collection<User>("users");
+    const confirmationCollection = dbCollections.confirmations;
+    const usersCollection = dbCollections.users;
 
     if (await confirmationCollection.findOne({ email: userEmail }) || await usersCollection.findOne({ email: userEmail })) {
       throw { message: "Email already exists", statusCode: 409 };
@@ -33,7 +30,7 @@ export const requestSignup = async (userEmail: string): Promise<string> => {
       throw new Error("Undefined database problem");
     }
 
-    const { data, error } = await email.sendPin(userEmail, pin);
+    const { error } = await email.sendPin(userEmail, pin);
 
     if (error) {
       throw { message: error, statusCode: 400 };
@@ -48,13 +45,10 @@ export const requestSignup = async (userEmail: string): Promise<string> => {
 
 export const requestNewPin = async (userEmail: string): Promise<string> => {
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
-    const usersCollection = mainDb.collection<User>("users");
+    const confirmationCollection = dbCollections.confirmations;
+    const usersCollection = dbCollections.users;
 
     if (await usersCollection.findOne({ email: userEmail })) {
       throw { message: "Email already verified", statusCode: 409 };
@@ -85,7 +79,7 @@ export const requestNewPin = async (userEmail: string): Promise<string> => {
       throw new Error("Undefined database problem");
     }
 
-    const { data, error } = await email.sendPin(userEmail, pin);
+    const { error } = await email.sendPin(userEmail, pin);
 
     if (error) {
       throw { message: error, statusCode: 400 };
@@ -100,12 +94,9 @@ export const requestNewPin = async (userEmail: string): Promise<string> => {
 
 export const confirmPin = async (userEmail: string, confirmPin: string): Promise<string> => { //function props should be sexier
   try {
-    if (!client) {
-      logger.warn("Database client is not available");
-      throw { message: "Database client is not available", statusCode: 503 };
-    }
+    dbFunctions.connectionCheck();
 
-    const confirmationCollection = mainDb.collection<UserConfirmation>("usersConfirmation");
+    const confirmationCollection = dbCollections.confirmations;
 
     const user = await confirmationCollection.findOne({ email: userEmail });
 
