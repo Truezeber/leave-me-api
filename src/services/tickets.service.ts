@@ -219,7 +219,7 @@ export const loadTickets = async (
       },
       {
         $addFields: {
-          last_message_date: { $max: "$messages.create_time" }
+          last_message_date: { $max: "$messages.created_at" }
         }
       },
       { $sort: { last_message_date: sortDirection } },
