@@ -219,10 +219,10 @@ export const loadTickets = async (
       },
       {
         $addFields: {
-          lastMessageDate: { $max: "$messages.createTime" }
+          last_message_date: { $max: "$messages.create_time" }
         }
       },
-      { $sort: { lastMessageDate: sortDirection } },
+      { $sort: { last_message_date: sortDirection } },
       { $limit: amount }
     ]).toArray() as unknown as Ticket[];
 
