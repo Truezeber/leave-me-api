@@ -222,6 +222,17 @@ export const loadTickets = async (
           last_message_date: { $max: "$messages.created_at" }
         }
       },
+      {
+        $project: {
+          ticket_id: 1,
+          author: 1,
+          created_at: 1,
+          category: 1,
+          participants: 1,
+          closed: 1,
+          last_message_date: 1,
+    }
+  },
       { $sort: { last_message_date: sortDirection } },
       { $limit: amount }
     ]).toArray() as unknown as Ticket[];
