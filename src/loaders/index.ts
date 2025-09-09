@@ -21,7 +21,7 @@ export const initializeApp = async (app: Application): Promise<void> => {
     );
   }
 
-  if (config.environment! === "production") {
+  if (config.environment === "development") {
     setupSwagger(app);
   }
   setupMiddlewares(app);
